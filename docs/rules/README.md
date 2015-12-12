@@ -42,6 +42,7 @@ The following rules point out areas where you might have made mistakes.
 These are rules designed to prevent you from making mistakes. They either prescribe a better way of doing something or help you avoid footguns.
 
 * [accessor-pairs](accessor-pairs.md) - Enforces getter/setter pairs in objects
+* [array-callback-return](array-callback-return.md) - Enforces return statements in callbacks of array's methods
 * [block-scoped-var](block-scoped-var.md) - treat `var` statements as if they were block scoped
 * [complexity](complexity.md) - specify the maximum cyclomatic complexity allowed in a program
 * [consistent-return](consistent-return.md) - require `return` statements to either always or never specify values
@@ -65,6 +66,7 @@ These are rules designed to prevent you from making mistakes. They either prescr
 * [no-fallthrough](no-fallthrough.md) - disallow fallthrough of `case` statements (recommended)
 * [no-floating-decimal](no-floating-decimal.md) - disallow the use of leading or trailing decimal points in numeric literals
 * [no-implicit-coercion](no-implicit-coercion.md) - disallow the type conversions with shorter notations
+* [no-implicit-globals](no-implicit-globals.md) - disallow `var` and named functions in global scope
 * [no-implied-eval](no-implied-eval.md) - disallow use of `eval()`-like methods
 * [no-invalid-this](no-invalid-this.md) - disallow `this` keywords outside of classes or class-like objects
 * [no-iterator](no-iterator.md) - disallow usage of `__iterator__` property
