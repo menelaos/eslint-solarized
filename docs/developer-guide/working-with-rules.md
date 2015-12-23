@@ -7,6 +7,7 @@ Each ESLint rule has two files: a source file in the `lib/rules` directory and a
  * @fileoverview Rule to flag use of an empty block statement
  * @author Nicholas C. Zakas
  * @copyright 2014 Nicholas C. Zakas. All rights reserved.
+ * See LICENSE in root directory for full license.
  */
 "use strict";
 
@@ -81,7 +82,6 @@ Additionally, the `context` object has the following methods:
 * `getFilename()` - returns the filename associated with the source.
 * `getScope()` - returns the current scope.
 * `getSourceCode()` - returns a `SourceCode` object that you can use to work with the source that was passed to ESLint
-* `isMarkedAsUsed(name)` - returns true if a given variable name has been marked as used.
 * `markVariableAsUsed(name)` - marks the named variable in scope as used. This affects the [no-unused-vars](../rules/no-unused-vars.md) rule.
 * `report(descriptor)` - reports a problem in the code.
 
@@ -336,6 +336,7 @@ The basic pattern for a rule unit test file is:
  * @fileoverview Tests for no-with rule.
  * @author Nicholas C. Zakas
  * @copyright 2015 Nicholas C. Zakas. All rights reserved.
+ * See LICENSE in root directory for full license.
  */
 
 "use strict";

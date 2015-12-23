@@ -313,6 +313,116 @@ ruleTester.run("key-spacing", rule, {
             "align": "value",
             "beforeColon": true
         }]
+    },
+
+    // https://github.com/eslint/eslint/issues/4763
+    {
+        code: "({a : foo, ...x, b : bar})['a'];",
+        options: [{
+            beforeColon: true,
+            afterColon: true
+        }],
+        parserOptions: { ecmaVersion: 6, ecmaFeatures: { experimentalObjectRestSpread: true } }
+    }, {
+        code: [
+            "var obj = {",
+            "    'a'     : (42 - 12),",
+            "    ...x,",
+            "    foobar  : 'value',",
+            "    [(expr)]: val",
+            "};"
+        ].join("\n"),
+        options: [{
+            align: "colon"
+        }],
+        parserOptions: { ecmaVersion: 6, ecmaFeatures: { experimentalObjectRestSpread: true } }
+    }, {
+        code: [
+            "callExpr(arg, {",
+            "    key       :val,",
+            "    ...x,",
+            "    ...y,",
+            "    'another' :false,",
+            "    [compute] :'value'",
+            "});"
+        ].join("\n"),
+        options: [{
+            align: "colon",
+            beforeColon: true,
+            afterColon: false
+        }],
+        parserOptions: { ecmaVersion: 6, ecmaFeatures: { experimentalObjectRestSpread: true } }
+    }, {
+        code: [
+            "var obj = {",
+            "    a:        (42 - 12),",
+            "    ...x,",
+            "    'foobar': 'value',",
+            "    bat:      function() {",
+            "        return this.a;",
+            "    },",
+            "    baz: 42",
+            "};"
+        ].join("\n"),
+        options: [{
+            align: "value"
+        }],
+        parserOptions: { ecmaVersion: 6, ecmaFeatures: { experimentalObjectRestSpread: true } }
+    }, {
+        code: [
+            "({",
+            "    ...x,",
+            "    a  : 0,",
+            "    // same group",
+            "    bcd: 0, /*",
+            "    end of group */",
+            "",
+            "    // different group",
+            "    e: 0,",
+            "    ...y,",
+            "    /* group b */",
+            "    f: 0",
+            "})"
+        ].join("\n"),
+        options: [{
+            align: "colon"
+        }],
+        parserOptions: { ecmaVersion: 6, ecmaFeatures: { experimentalObjectRestSpread: true } }
+    },
+
+    // https://github.com/eslint/eslint/issues/4792
+    {
+        code: [
+            "({",
+            "    a: 42,",
+            "    get b() { return 42; }",
+            "})"
+        ].join("\n"),
+        options: [{
+            align: "colon"
+        }]
+    }, {
+        code: [
+            "({",
+            "    set a(b) { b; },",
+            "    c: 42",
+            "})"
+        ].join("\n"),
+        options: [{
+            align: "value"
+        }]
+    }, {
+        code: [
+            "({",
+            "    a  : 42,",
+            "    get b() { return 42; },",
+            "    set c(v) { v; },",
+            "    def: 42",
+            "})"
+        ].join("\n"),
+        options: [{
+            align: "colon"
+        }]
     }],
 
     invalid: [{
@@ -681,6 +791,75 @@ ruleTester.run("key-spacing", rule, {
         options: [{ "align": "colon" }],
         errors: [
             { message: "Extra space before value for key \"cats\".", line: 2, column: 20, type: "Identifier" }
+        ]
+    },
+
+    // https://github.com/eslint/eslint/issues/4763
+    {
+        code: [
+            "({",
+            "    ...x,",
+            "    a : 0,",
+            "    // same group",
+            "    bcd: 0, /*",
+            "    end of group */",
+            "",
+            "    // different group",
+            "    e: 0,",
+            "    ...y,",
+            "    /* group b */",
+            "    f : 0",
+            "})"
+        ].join("\n"),
+        options: [{ "align": "colon" }],
+        parserOptions: { ecmaVersion: 6, ecmaFeatures: { experimentalObjectRestSpread: true } },
+        errors: [
+            { message: "Missing space after key \"a\".", line: 3, column: 5, type: "Identifier" },
+            { message: "Extra space after key \"f\".", line: 12, column: 5, type: "Identifier" }
+        ]
+    },
+
+    // https://github.com/eslint/eslint/issues/4792
+    {
+        code: [
+            "({",
+            "    a : 42,",
+            "    get b() { return 42; }",
+            "})"
+        ].join("\n"),
+        options: [{
+            align: "colon"
+        }],
+        errors: [
+            { message: "Extra space after key \"a\".", line: 2, column: 5, type: "Identifier" }
+        ]
+    }, {
+        code: [
+            "({",
+            "    set a(b) { b; },",
+            "    c : 42",
+            "})"
+        ].join("\n"),
+        options: [{
+            align: "value"
+        }],
+        errors: [
+            { message: "Extra space after key \"c\".", line: 3, column: 5, type: "Identifier" }
+        ]
+    }, {
+        code: [
+            "({",
+            "    a: 42,",
+            "    get b() { return 42; },",
+            "    set c(v) { v; },",
+            "    def: 42",
+            "})"
+        ].join("\n"),
+        options: [{
+            align: "colon"
+        }],
+        errors: [
+            { message: "Missing space after key \"a\".", line: 2, column: 5, type: "Identifier" }
         ]
     }]
 });
