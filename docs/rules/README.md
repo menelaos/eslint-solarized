@@ -10,7 +10,7 @@ The following rules point out areas where you might have made mistakes.
 
 * [comma-dangle](comma-dangle.md) - disallow or enforce trailing commas (recommended)
 * [no-cond-assign](no-cond-assign.md) - disallow assignment in conditional expressions (recommended)
-* [no-console](no-console.md) - disallow use of `console` in the node environment (recommended)
+* [no-console](no-console.md) - disallow use of `console` (recommended)
 * [no-constant-condition](no-constant-condition.md) - disallow use of constant expressions in conditions (recommended)
 * [no-control-regex](no-control-regex.md) - disallow control characters in regular expressions (recommended)
 * [no-debugger](no-debugger.md) - disallow use of `debugger` (recommended)
@@ -182,6 +182,7 @@ These rules are purely matters of style and are quite subjective.
 * [no-new-object](no-new-object.md) - disallow the use of the `Object` constructor
 * [no-plusplus](no-plusplus.md) - disallow use of unary operators, `++` and `--`
 * [no-restricted-syntax](no-restricted-syntax.md) - disallow use of certain syntax in code
+* [no-whitespace-before-property](no-whitespace-before-property.md) - disallow whitespace before properties
 * [no-spaced-func](no-spaced-func.md) - disallow space between function identifier and application (fixable)
 * [no-ternary](no-ternary.md) - disallow the use of ternary operators
 * [no-trailing-spaces](no-trailing-spaces.md) - disallow trailing whitespace at the end of lines (fixable)
@@ -224,6 +225,7 @@ These rules are only relevant to ES6 environments.
 * [no-dupe-class-members](no-dupe-class-members.md) - disallow duplicate name in class members
 * [no-this-before-super](no-this-before-super.md) - disallow use of `this`/`super` before calling `super()` in constructors.
 * [no-var](no-var.md) - require `let` or `const` instead of `var`
+* [no-useless-constructor](no-useless-constructor.md) - disallow unnecessary constructor
 * [object-shorthand](object-shorthand.md) - require method and property shorthand syntax for object literals
 * [prefer-arrow-callback](prefer-arrow-callback.md) - suggest using arrow functions as callbacks
 * [prefer-const](prefer-const.md) - suggest using `const` declaration for variables that are never modified after declared
