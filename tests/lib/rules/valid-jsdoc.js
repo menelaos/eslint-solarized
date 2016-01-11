@@ -203,6 +203,26 @@ ruleTester.run("valid-jsdoc", rule, {
             parserOptions: {
                 ecmaVersion: 6
             }
+        },
+
+
+        {
+            code:
+                "/**\n" +
+                " * Use of this with a 'namepath'.\n" +
+                " * @this some.name\n" +
+                " */\n" +
+                "function foo() {}",
+            options: [{requireReturn: false}]
+        },
+        {
+            code:
+                "/**\n" +
+                " * Use of this with a type expression.\n" +
+                " * @this {some.name}\n" +
+                " */\n" +
+                "function foo() {}",
+            options: [{requireReturn: false}]
         }
     ],
 
@@ -304,6 +324,59 @@ ruleTester.run("valid-jsdoc", rule, {
                 message: "Missing JSDoc @returns for function.",
                 type: "Block"
             }]
+        },
+        {
+            code: "/**\n* Foo\n* @param {string} p \n*/\nvar foo = function(){}",
+            errors: [{
+                message: "Missing JSDoc parameter description for 'p'.",
+                type: "Block"
+            }, {
+                message: "Missing JSDoc @returns for function.",
+                type: "Block"
+            }]
+        },
+        {
+            code: "/**\n* Foo\n* @param {string} p \n*/\nvar foo = \nfunction(){}",
+            errors: [{
+                message: "Missing JSDoc parameter description for 'p'.",
+                type: "Block"
+            }, {
+                message: "Missing JSDoc @returns for function.",
+                type: "Block"
+            }]
+        },
+        {
+            code:
+            "/**\n" +
+            " * Description for a\n" +
+            " */\n" +
+            "var A = \n" +
+            "  class {\n" +
+            "    /**\n" +
+            "     * Description for constructor.\n" +
+            "     * @param {object[]} xs - xs\n" +
+            "     */\n" +
+            "    constructor(xs) {\n" +
+            "        this.a = xs;" +
+            "    }\n" +
+            "};",
+            options: [{
+                requireReturn: true,
+                "matchDescription": "^[A-Z][A-Za-z0-9\\s]*[.]$"
+            }],
+            errors: [
+                {
+                    message: "JSDoc description does not satisfy the regex pattern.",
+                    type: "Block"
+                },
+                {
+                    message: "Missing JSDoc @returns for function.",
+                    type: "Block"
+                }
+            ],
+            parserOptions: {
+                ecmaVersion: 6
+            }
         },
         {
             code: "/**\n* Foo\n* @returns {string} \n*/\nfunction foo(){}",
@@ -561,6 +634,32 @@ ruleTester.run("valid-jsdoc", rule, {
             parserOptions: {
                 ecmaVersion: 6
             }
+        },
+        {
+            code:
+                "/**\n" +
+                " * Use of this with an invalid type expression\n" +
+                " * @this {not.a.valid.type.expression\n" +
+                " */\n" +
+                "function foo() {}",
+            options: [{requireReturn: false}],
+            errors: [{
+                message: "JSDoc type missing brace.",
+                type: "Block"
+            }]
+        },
+        {
+            code:
+                "/**\n" +
+                " * Use of this with a type that is not a member expression\n" +
+                " * @this {Array<string>}\n" +
+                " */\n" +
+                "function foo() {}",
+            options: [{requireReturn: false}],
+            errors: [{
+                message: "JSDoc syntax error.",
+                type: "Block"
+            }]
         }
     ]
 });
