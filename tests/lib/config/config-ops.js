@@ -13,7 +13,10 @@
 var assert = require("chai").assert,
     assign = require("object-assign"),
     environments = require("../../../conf/environments"),
-    ConfigOps = require("../../../lib/config/config-ops");
+    ConfigOps = require("../../../lib/config/config-ops"),
+    proxyquire = require("proxyquire");
+
+proxyquire = proxyquire.noCallThru().noPreserveCache();
 
 //------------------------------------------------------------------------------
 // Tests
@@ -82,6 +85,42 @@ describe("ConfigOps", function() {
     });
 
     describe("createEnvironmentConfig()", function() {
+
+        it("should return empty config if called without any config", function() {
+            var config = ConfigOps.createEnvironmentConfig(null);
+            assert.deepEqual(config, {
+                globals: {},
+                env: {},
+                rules: {},
+                parserOptions: {}
+            });
+        });
+
+        it("should return correct config for env with no globals", function() {
+            var StubbedConfigOps = proxyquire("../../../lib/config/config-ops", {
+                "./environments": {
+                    get: function() {
+                        return {
+                            parserOptions: {
+                                sourceType: "module"
+                            }
+                        };
+                    }
+                }
+            });
+
+            var config = StubbedConfigOps.createEnvironmentConfig({ test: true });
+            assert.deepEqual(config, {
+                globals: {},
+                env: {
+                    test: true
+                },
+                rules: {},
+                parserOptions: {
+                    sourceType: "module"
+                }
+            });
+        });
 
         it("should create the correct config for Node.js environment", function() {
             var config = ConfigOps.createEnvironmentConfig({ node: true });
