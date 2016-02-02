@@ -57,12 +57,13 @@ These are rules designed to prevent you from making mistakes. They either prescr
 * [no-case-declarations](no-case-declarations.md) - disallow lexical declarations in case clauses (recommended)
 * [no-div-regex](no-div-regex.md) - disallow division operators explicitly at beginning of regular expression
 * [no-else-return](no-else-return.md) - disallow `else` after a `return` in an `if`
-* [no-empty-label](no-empty-label.md) - disallow use of labels for anything other than loops and switches (recommended)
+* [no-empty-label](no-empty-label.md) - disallow use of labels for anything other than loops and switches
 * [no-empty-pattern](no-empty-pattern.md) - disallow use of empty destructuring patterns (recommended)
 * [no-eq-null](no-eq-null.md) - disallow comparisons to null without a type-checking operator
 * [no-eval](no-eval.md) - disallow use of `eval()`
 * [no-extend-native](no-extend-native.md) - disallow adding to native types
 * [no-extra-bind](no-extra-bind.md) - disallow unnecessary function binding
+* [no-extra-label](no-extra-label.md) - disallow unnecessary labels
 * [no-fallthrough](no-fallthrough.md) - disallow fallthrough of `case` statements (recommended)
 * [no-floating-decimal](no-floating-decimal.md) - disallow the use of leading or trailing decimal points in numeric literals
 * [no-implicit-coercion](no-implicit-coercion.md) - disallow the type conversions with shorter notations
@@ -88,11 +89,13 @@ These are rules designed to prevent you from making mistakes. They either prescr
 * [no-redeclare](no-redeclare.md) - disallow declaring the same variable more than once (recommended)
 * [no-return-assign](no-return-assign.md) - disallow use of assignment in `return` statement
 * [no-script-url](no-script-url.md) - disallow use of `javascript:` urls.
+* [no-self-assign](no-self-assign.md) - disallow assignments where both sides are exactly the same (recommended)
 * [no-self-compare](no-self-compare.md) - disallow comparisons where both sides are exactly the same
 * [no-sequences](no-sequences.md) - disallow use of the comma operator
 * [no-throw-literal](no-throw-literal.md) - restrict what can be thrown as an exception
 * [no-unmodified-loop-condition](no-unmodified-loop-condition.md) - disallow unmodified conditions of loops
 * [no-unused-expressions](no-unused-expressions.md) - disallow usage of expressions in statement position
+* [no-unused-labels](no-unused-labels.md) - disallow unused labels (recommended)
 * [no-useless-call](no-useless-call.md) - disallow unnecessary `.call()` and `.apply()`
 * [no-useless-concat](no-useless-concat.md) - disallow unnecessary concatenation of literals or template literals
 * [no-void](no-void.md) - disallow use of the `void` operator
@@ -236,6 +239,7 @@ These rules are only relevant to ES6 environments.
 * [prefer-spread](prefer-spread.md) - suggest using the spread operator instead of `.apply()`.
 * [prefer-template](prefer-template.md) - suggest using template literals instead of strings concatenation
 * [require-yield](require-yield.md) - disallow generator functions that do not have `yield`
+* [template-curly-spacing](template-curly-spacing.md) - enforce spacing around embedded expressions of template strings (fixable)
 * [yield-star-spacing](yield-star-spacing.md) - enforce spacing around the `*` in `yield*` expressions (fixable)
 
 
