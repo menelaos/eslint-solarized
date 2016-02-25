@@ -1071,6 +1071,20 @@ ruleTester.run("indent", rule, {
         },
         {
             code:
+            "var haveFun = function () {\n" +
+            "    new SillyFunction(\n" +
+            "        {\n" +
+            "            value: true,\n" +
+            "        },\n" +
+            "        {\n" +
+            "            _id: true,\n" +
+            "        }\n" +
+            "    );\n" +
+            "};",
+            options: [4]
+        },
+        {
+            code:
             "let object1 = {\n" +
             "  doThing() {\n" +
             "    return _.chain([])\n" +
@@ -1932,6 +1946,68 @@ ruleTester.run("indent", rule, {
             options: [2, {"VariableDeclarator": 2, "SwitchCase": 1}],
             parserOptions: { ecmaVersion: 6 },
             errors: expectedErrors([[3, 6, 4, "MethodDefinition"]])
+        },
+        {
+            code:
+            "{\n" +
+            "    if(a){\n" +
+            "        foo();\n" +
+            "    }\n" +
+            "  else{\n" +
+            "        bar();\n" +
+            "    }\n" +
+            "}\n",
+            output:
+            "{\n" +
+            "    if(a){\n" +
+            "        foo();\n" +
+            "    }\n" +
+            "    else{\n" +
+            "        bar();\n" +
+            "    }\n" +
+            "}\n",
+            options: [4],
+            errors: expectedErrors([[5, 4, 2, "Keyword"]])
+        },
+        {
+            code:
+            "{\n" +
+            "    if(a){\n" +
+            "        foo();\n" +
+            "    }\n" +
+            "  else\n" +
+            "        bar();\n" +
+            "    \n" +
+            "}\n",
+            output:
+            "{\n" +
+            "    if(a){\n" +
+            "        foo();\n" +
+            "    }\n" +
+            "    else\n" +
+            "        bar();\n" +
+            "    \n" +
+            "}\n",
+            options: [4],
+            errors: expectedErrors([[5, 4, 2, "Keyword"]])
+        },
+        {
+            code:
+            "{\n" +
+            "    if(a)\n" +
+            "        foo();\n" +
+            "  else\n" +
+            "        bar();\n" +
+            "}\n",
+            output:
+            "{\n" +
+            "    if(a)\n" +
+            "        foo();\n" +
+            "    else\n" +
+            "        bar();\n" +
+            "}\n",
+            options: [4],
+            errors: expectedErrors([[4, 4, 2, "Keyword"]])
         }
     ]
 });
