@@ -1701,7 +1701,7 @@ describe("eslint", function() {
             var config = { rules: {} };
 
             var fn = eslint.verify.bind(eslint, code, config, filename);
-            assert.throws(fn, "filename.js line 1:\n\tConfiguration for rule \"no-alert\" is invalid:\n\tSeverity should be one of the following: 0 = off, 1 = warning, 2 = error (you passed \"true\").\n");
+            assert.throws(fn, "filename.js line 1:\n\tConfiguration for rule \"no-alert\" is invalid:\n\tSeverity should be one of the following: 0 = off, 1 = warning, 2 = error (you passed 'true').\n");
         });
     });
 
@@ -3114,6 +3114,11 @@ describe("eslint", function() {
 
             eslint.verify(code, {rules: {test: 2}});
             assert(ok);
+        });
+
+        it("should not crash when we reuse the SourceCode object", function() {
+            eslint.verify("function render() { return <div className='test'>{hello}</div> }", { parserOptions: { ecmaVersion: 6, ecmaFeatures: {jsx: true} }});
+            eslint.verify(eslint.getSourceCode(), { parserOptions: { ecmaVersion: 6, ecmaFeatures: {jsx: true} }});
         });
     });
 
