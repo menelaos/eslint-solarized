@@ -23,17 +23,19 @@ This rule aims to reduce the complexity of your code by allowing you to configur
 The default depth above which this rule will warn is `4`.  You can configure the depth as an option by using the second argument in your configuration. For example, this sets the rule as an error with a maximum depth of 10:
 
 ```json
-"max-depth": [2, 10]
+"max-depth": ["error", 10]
 
 // or you can use an object property
 
-"max-depth": [2, {"maximum": 10}]
+"max-depth": ["error", {"max": 10}]
 ```
+
+**Deprecated:** the object property `maximum` is deprecated. Please use the property `max` instead.
 
 The following patterns are considered problems:
 
 ```js
-/*eslint max-depth: [2, 2]*/
+/*eslint max-depth: ["error", 2]*/
 
 function foo() {
   for (;;) {
@@ -49,7 +51,7 @@ function foo() {
 The following patterns are not considered problems:
 
 ```js
-/*eslint max-depth: [2, 2]*/
+/*eslint max-depth: ["error", 2]*/
 
 function foo() {
   for (;;) {

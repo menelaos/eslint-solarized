@@ -23,7 +23,8 @@ var RuleTester = require("../../../lib/testers/rule-tester");
  * @returns {void}
  */
 function NORMAL() {
-    // do nohting.
+
+    // do nothing.
 }
 
 /**
@@ -66,10 +67,12 @@ function MODULES(pattern) {
  * @returns {object[]} Test patterns.
  */
 function extractPatterns(patterns, type) {
+
     // Clone and apply the pattern environment.
     var patternsList = patterns.map(function(pattern) {
         return pattern[type].map(function(applyCondition) {
             var thisPattern = lodash.cloneDeep(pattern);
+
             applyCondition(thisPattern);
 
             if (type === "valid") {
@@ -97,6 +100,7 @@ var errors = [
 ];
 
 var patterns = [
+
     // Global.
     {
         code: "console.log(this); z(x => console.log(x, this));",
@@ -530,6 +534,7 @@ var patterns = [
 ];
 
 var ruleTester = new RuleTester();
+
 ruleTester.run("no-invalid-this", rule, {
     valid: extractPatterns(patterns, "valid"),
     invalid: extractPatterns(patterns, "invalid")

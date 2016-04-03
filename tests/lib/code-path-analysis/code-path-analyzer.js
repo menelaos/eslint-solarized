@@ -42,6 +42,7 @@ function getExpectedDotArrows(source) {
 
     var retv = [];
     var m;
+
     while ((m = expectedPattern.exec(source)) !== null) {
         retv.push(m[1].replace(lineEndingPattern, "\n"));
     }
@@ -148,6 +149,7 @@ describe("CodePathAnalyzer", function() {
             // there is the current segment in progress.
             eslint.defineRule("test", function() {
                 var codePath = null;
+
                 return {
                     "onCodePathStart": function(cp) {
                         codePath = cp;
@@ -490,7 +492,9 @@ describe("CodePathAnalyzer", function() {
                         count += 1;
                         assert(fromSegment instanceof CodePathSegment);
                         assert(toSegment instanceof CodePathSegment);
+
                         if (count === 1) {
+
                             // connect path: "update" -> "test"
                             assert(node.parent.type === "ForStatement");
                         } else if (count === 2) {
@@ -516,7 +520,9 @@ describe("CodePathAnalyzer", function() {
                         count += 1;
                         assert(fromSegment instanceof CodePathSegment);
                         assert(toSegment instanceof CodePathSegment);
+
                         if (count === 1) {
+
                             // connect path: "right" -> "left"
                             assert(node.parent.type === "ForInStatement");
                         } else if (count === 2) {
@@ -542,7 +548,9 @@ describe("CodePathAnalyzer", function() {
                         count += 1;
                         assert(fromSegment instanceof CodePathSegment);
                         assert(toSegment instanceof CodePathSegment);
+
                         if (count === 1) {
+
                             // connect path: "right" -> "left"
                             assert(node.parent.type === "ForOfStatement");
                         } else if (count === 2) {
@@ -580,6 +588,7 @@ describe("CodePathAnalyzer", function() {
                     };
                 });
                 var messages = eslint.verify(source, {rules: {test: 2}, env: {es6: true}});
+
                 assert.equal(messages.length, 0);
                 assert.equal(actual.length, expected.length, "a count of code paths is wrong.");
 

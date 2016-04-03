@@ -14,6 +14,7 @@ var rule = require("../../../lib/rules/strict"),
     RuleTester = require("../../../lib/testers/rule-tester");
 
 var ruleTester = new RuleTester();
+
 ruleTester.run("strict", rule, {
     valid: [
 
@@ -339,6 +340,7 @@ ruleTester.run("strict", rule, {
             options: ["function"],
             errors: [{ message: "Use the function form of 'use strict'.", type: "ArrowFunctionExpression"}]
         },
+
         // Classes
         {
             code: "class A { constructor() { \"use strict\"; } }",

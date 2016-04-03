@@ -17,6 +17,7 @@ var rule = require("../../../lib/rules/array-bracket-spacing"),
 //------------------------------------------------------------------------------
 
 var ruleTester = new RuleTester();
+
 ruleTester.run("array-bracket-spacing", rule, {
 
     valid: [
@@ -177,6 +178,7 @@ ruleTester.run("array-bracket-spacing", rule, {
                 }
             ]
         },
+
         // objectsInArrays
         {
             code: "var foo = [ { 'bar': 'baz' }, 1,  5];",

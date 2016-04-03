@@ -30,6 +30,7 @@ var fixtureDir;
  */
 function getFixturePath() {
     var args = Array.prototype.slice.call(arguments);
+
     args.unshift(fs.realpathSync(fixtureDir));
     return path.join.apply(path, args);
 }
@@ -228,6 +229,7 @@ describe("globUtil", function() {
         });
 
         it("should not return an ignored file", function() {
+
             // Relying here on the .eslintignore from the repo root
             var patterns = ["tests/fixtures/glob-util/ignored/**/*.js"];
             var result = globUtil.listFilesToProcess(patterns);
@@ -247,6 +249,7 @@ describe("globUtil", function() {
             var options = { ignore: true, ignorePath: getFixturePath("glob-util", "ignored", ".eslintignore") };
             var patterns = [getFixturePath("glob-util", "ignored", "**/*.js")];
             var result = globUtil.listFilesToProcess(patterns, options);
+
             assert.equal(result.length, 0);
         });
 
@@ -254,6 +257,7 @@ describe("globUtil", function() {
             var options = { ignore: true, ignorePattern: "foo.js", cwd: getFixturePath() };
             var patterns = [getFixturePath("glob-util", "ignored", "**/*.js")];
             var result = globUtil.listFilesToProcess(patterns, options);
+
             assert.equal(result.length, 0);
         });
 
@@ -279,6 +283,7 @@ describe("globUtil", function() {
             var filename = getFixturePath("glob-util", "ignored", "foo.js");
             var patterns = [filename];
             var result = globUtil.listFilesToProcess(patterns, options);
+
             assert.equal(result.length, 1);
             assert.deepEqual(result, [
                 {filename: filename, ignored: true}
@@ -293,6 +298,7 @@ describe("globUtil", function() {
             var resultFilenames = result.map(function(resultObj) {
                 return resultObj.filename;
             });
+
             assert.notInclude(resultFilenames, getFixturePath("glob-util", "node_modules", "dependency.js"));
         });
 
@@ -302,6 +308,7 @@ describe("globUtil", function() {
             var patterns = [glob];
             var result = globUtil.listFilesToProcess(patterns, options);
             var unignoredFilename = getFixturePath("glob-util", "node_modules", "dependency.js");
+
             assert.includeDeepMembers(result, [{filename: unignoredFilename, ignored: false}]);
         });
     });

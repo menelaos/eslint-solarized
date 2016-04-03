@@ -17,6 +17,7 @@ var rule = require("../../../lib/rules/valid-jsdoc"),
 //------------------------------------------------------------------------------
 
 var ruleTester = new RuleTester();
+
 ruleTester.run("valid-jsdoc", rule, {
 
     valid: [
@@ -265,6 +266,7 @@ ruleTester.run("valid-jsdoc", rule, {
                 "function foo() {}",
             options: [{requireReturn: false}]
         },
+
         // type validations
         {
             code:
@@ -366,6 +368,28 @@ ruleTester.run("valid-jsdoc", rule, {
         {
             code:
             "/**\n" +
+            " * Foo\n" +
+            " * @module module-name\n" +
+            " */\n" +
+            "function foo() {}",
+            options: [{
+                "requireReturn": false
+            }]
+        },
+        {
+            code:
+            "/**\n" +
+            " * Foo\n" +
+            " * @alias module:module-name\n" +
+            " */\n" +
+            "function foo() {}",
+            options: [{
+                "requireReturn": false
+            }]
+        },
+        {
+            code:
+            "/**\n" +
             "* Foo\n" +
             "* @param {Array.<string>} hi - desc\n" +
             "* @returns {Array.<string|number>} desc\n" +
@@ -390,6 +414,63 @@ ruleTester.run("valid-jsdoc", rule, {
                     "String": "string"
                 }
             }]
+        },
+        {
+            code:
+            "/**\n" +
+            "* Foo\n" +
+            "* @param {Array.<{id: number, votes: number}>} hi - desc\n" +
+            "* @returns {Array.<{summary: string}>} desc\n" +
+            "*/\n" +
+            "function foo(hi){}",
+            options: [{
+                preferType: {
+                    "Number": "number",
+                    "String": "string"
+                }
+            }]
+        },
+        {
+            code:
+            "/**\n" +
+            "* Foo\n" +
+            "* @param {Array.<[string, number]>} hi - desc\n" +
+            "* @returns {Array.<[string, string]>} desc\n" +
+            "*/\n" +
+            "function foo(hi){}",
+            options: [{
+                preferType: {
+                    "Number": "number",
+                    "String": "string"
+                }
+            }]
+        },
+        {
+            code:
+            "/**\n" +
+            "* Foo\n" +
+            "* @param {Object<string,Object<string, number>>} hi - because why not\n" +
+            "* @returns {Boolean} desc\n" +
+            "*/\n" +
+            "function foo(hi){}",
+            options: [{
+                preferType: {
+                    "Number": "number",
+                    "String": "string"
+                }
+            }]
+        },
+        {
+            code: "/**\n* Description\n* @param {string} a bar\n* @returns {string} desc */\nfunction foo(a = 1){}",
+            parserOptions: {
+                ecmaVersion: 6
+            }
+        },
+        {
+            code: "/**\n* Description\n* @param {string} b bar\n* @param {string} a bar\n* @returns {string} desc */\nfunction foo(b, a = 1){}",
+            parserOptions: {
+                ecmaVersion: 6
+            }
         }
     ],
 
@@ -597,6 +678,26 @@ ruleTester.run("valid-jsdoc", rule, {
             }]
         },
         {
+            code: "/**\n* Foo\n* @returns {string} something \n*/\nvar foo = \nfunction foo(a = 1){}",
+            parserOptions: { ecmaVersion: 6 },
+            errors: [{
+                message: "Missing JSDoc for parameter 'a'.",
+                type: "Block"
+            }]
+        },
+        {
+            code: "/**\n* Foo\n* @param {string} a Description \n* @param {string} b Description \n* @returns {string} something \n*/\nvar foo = \nfunction foo(b, a = 1){}",
+            parserOptions: { ecmaVersion: 6 },
+            errors: [{
+                message: "Expected JSDoc for 'b' but found 'a'.",
+                type: "Block"
+            },
+            {
+                message: "Expected JSDoc for 'a' but found 'b'.",
+                type: "Block"
+            }]
+        },
+        {
             code: "/**\n* Foo\n* @param {string} p desc\n* @param {string} p desc \n*/\nfunction foo(){}",
             errors: [{
                 message: "Duplicate JSDoc parameter 'p'.",
@@ -738,6 +839,7 @@ ruleTester.run("valid-jsdoc", rule, {
                 type: "Block"
             }]
         },
+
         // classes
         {
             code:
@@ -954,6 +1056,106 @@ ruleTester.run("valid-jsdoc", rule, {
             errors: [
                 {
                     message: "Use 'string' instead of 'String'.",
+                    type: "Block"
+                }
+            ]
+        },
+        {
+            code:
+            "/**\n" +
+            "* Foo\n" +
+            "* @param {Array.<{id: Number, votes: Number}>} hi - desc\n" +
+            "* @returns {Array.<{summary: String}>} desc\n" +
+            "*/\n" +
+            "function foo(hi){}",
+            options: [{
+                preferType: {
+                    "Number": "number",
+                    "String": "string"
+                }
+            }],
+            errors: [
+                {
+                    message: "Use 'number' instead of 'Number'.",
+                    type: "Block"
+                },
+                {
+                    message: "Use 'number' instead of 'Number'.",
+                    type: "Block"
+                },
+                {
+                    message: "Use 'string' instead of 'String'.",
+                    type: "Block"
+                }
+            ]
+        },
+        {
+            code:
+            "/**\n" +
+            "* Foo\n" +
+            "* @param {Array.<[String, Number]>} hi - desc\n" +
+            "* @returns {Array.<[String, String]>} desc\n" +
+            "*/\n" +
+            "function foo(hi){}",
+            options: [{
+                preferType: {
+                    "Number": "number",
+                    "String": "string"
+                }
+            }],
+            errors: [
+                {
+                    message: "Use 'string' instead of 'String'.",
+                    type: "Block"
+                },
+                {
+                    message: "Use 'number' instead of 'Number'.",
+                    type: "Block"
+                },
+                {
+                    message: "Use 'string' instead of 'String'.",
+                    type: "Block"
+                },
+                {
+                    message: "Use 'string' instead of 'String'.",
+                    type: "Block"
+                }
+            ]
+        },
+        {
+            code:
+            "/**\n" +
+            "* Foo\n" +
+            "* @param {object<String,object<String, Number>>} hi - because why not\n" +
+            "* @returns {Boolean} desc\n" +
+            "*/\n" +
+            "function foo(hi){}",
+            options: [{
+                preferType: {
+                    "Number": "number",
+                    "String": "string",
+                    "object": "Object"
+                }
+            }],
+            errors: [
+                {
+                    message: "Use 'string' instead of 'String'.",
+                    type: "Block"
+                },
+                {
+                    message: "Use 'string' instead of 'String'.",
+                    type: "Block"
+                },
+                {
+                    message: "Use 'number' instead of 'Number'.",
+                    type: "Block"
+                },
+                {
+                    message: "Use 'Object' instead of 'object'.",
+                    type: "Block"
+                },
+                {
+                    message: "Use 'Object' instead of 'object'.",
                     type: "Block"
                 }
             ]

@@ -18,6 +18,7 @@ var rule = require("../../../lib/rules/yield-star-spacing"),
 //------------------------------------------------------------------------------
 
 var ruleTester = new RuleTester();
+
 ruleTester.run("yield-star-spacing", rule, {
 
     valid: [
@@ -167,6 +168,7 @@ ruleTester.run("yield-star-spacing", rule, {
     ],
 
     invalid: [
+
         // default (after)
         {
             code: "function *foo(){ yield *foo1; }",

@@ -35,6 +35,7 @@ describe("ast-utils", function() {
 
     describe("isTokenOnSameLine", function() {
         it("should return false if its not on sameline", function() {
+
             /**
              * Check the node for tokens
              * @param {ASTNode} node node to examine
@@ -50,6 +51,7 @@ describe("ast-utils", function() {
         });
 
         it("should return true if its on sameline", function() {
+
             /**
              * Check the node for tokens
              * @param {ASTNode} node node to examine
@@ -67,6 +69,7 @@ describe("ast-utils", function() {
 
     describe("isNullOrUndefined", function() {
         it("should return true if its null", function() {
+
             /**
              * Check the node for tokens
              * @param {ASTNode} node node to examine
@@ -82,6 +85,7 @@ describe("ast-utils", function() {
         });
 
         it("should return true if its undefined", function() {
+
             /**
              * Check the node for tokens
              * @param {ASTNode} node node to examine
@@ -97,6 +101,7 @@ describe("ast-utils", function() {
         });
 
         it("should return false if its a number", function() {
+
             /**
              * Check the node for tokens
              * @param {ASTNode} node node to examine
@@ -112,6 +117,7 @@ describe("ast-utils", function() {
         });
 
         it("should return false if its a string", function() {
+
             /**
              * Check the node for tokens
              * @param {ASTNode} node node to examine
@@ -127,6 +133,7 @@ describe("ast-utils", function() {
         });
 
         it("should return false if its a boolean", function() {
+
             /**
              * Check the node for tokens
              * @param {ASTNode} node node to examine
@@ -142,6 +149,7 @@ describe("ast-utils", function() {
         });
 
         it("should return false if its an object", function() {
+
             /**
              * Check the node for tokens
              * @param {ASTNode} node node to examine
@@ -158,8 +166,10 @@ describe("ast-utils", function() {
     });
 
     describe("checkReference", function() {
+
         // catch
         it("should return true if reference is assigned for catch", function() {
+
             /**
              * Check the node for tokens
              * @param {ASTNode} node node to examine
@@ -167,6 +177,7 @@ describe("ast-utils", function() {
              */
             function checker(node) {
                 var variables = eslint.getDeclaredVariables(node);
+
                 assert.lengthOf(astUtils.getModifyingReferences(variables[0].references), 1);
             }
 
@@ -177,6 +188,7 @@ describe("ast-utils", function() {
 
         // const
         it("should return true if reference is assigned for const", function() {
+
             /**
              * Check the node for tokens
              * @param {ASTNode} node node to examine
@@ -184,6 +196,7 @@ describe("ast-utils", function() {
              */
             function checker(node) {
                 var variables = eslint.getDeclaredVariables(node);
+
                 assert.lengthOf(astUtils.getModifyingReferences(variables[0].references), 1);
             }
 
@@ -193,6 +206,7 @@ describe("ast-utils", function() {
         });
 
         it("should return false if reference is not assigned for const", function() {
+
             /**
              * Check the node for tokens
              * @param {ASTNode} node node to examine
@@ -200,6 +214,7 @@ describe("ast-utils", function() {
              */
             function checker(node) {
                 var variables = eslint.getDeclaredVariables(node);
+
                 assert.lengthOf(astUtils.getModifyingReferences(variables[0].references), 0);
             }
 
@@ -210,6 +225,7 @@ describe("ast-utils", function() {
 
         // class
         it("should return true if reference is assigned for class", function() {
+
             /**
              * Check the node for tokens
              * @param {ASTNode} node node to examine
@@ -217,6 +233,7 @@ describe("ast-utils", function() {
              */
             function checker(node) {
                 var variables = eslint.getDeclaredVariables(node);
+
                 assert.lengthOf(astUtils.getModifyingReferences(variables[0].references), 1);
                 assert.lengthOf(astUtils.getModifyingReferences(variables[1].references), 0);
             }
@@ -227,6 +244,7 @@ describe("ast-utils", function() {
         });
 
         it("should return false if reference is not assigned for class", function() {
+
             /**
              * Check the node for tokens
              * @param {ASTNode} node node to examine
@@ -234,6 +252,7 @@ describe("ast-utils", function() {
              */
             function checker(node) {
                 var variables = eslint.getDeclaredVariables(node);
+
                 assert.lengthOf(astUtils.getModifyingReferences(variables[0].references), 0);
             }
 
@@ -244,6 +263,7 @@ describe("ast-utils", function() {
     });
 
     describe("isDirectiveComment", function() {
+
         /**
          * Asserts the node is NOT a directive comment
          * @param {ASTNode} node node to assert
@@ -308,6 +328,7 @@ describe("ast-utils", function() {
             range: true,
             loc: true
         };
+
         it("should return false for not parenthesised nodes", function() {
             var code = "condition ? 1 : 2";
             var ast = espree.parse(code, ESPREE_CONFIG);

@@ -16,6 +16,7 @@ var rule = require("../../../lib/rules/max-len"),
 //------------------------------------------------------------------------------
 
 var ruleTester = new RuleTester();
+
 ruleTester.run("max-len", rule, {
     valid: [
         "var x = 5;\nvar x = 2;",
@@ -83,6 +84,7 @@ ruleTester.run("max-len", rule, {
             code: "var foo = module.exports = {}; // really long trailing comment",
             options: [40, 4, {ignoreComments: true, ignoreTrailingComments: false}]
         },
+
         // blank line
         ""
     ],

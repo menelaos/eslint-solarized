@@ -18,8 +18,10 @@ var RuleTester = require("../../../lib/testers/rule-tester");
 //------------------------------------------------------------------------------
 
 var ruleTester = new RuleTester();
+
 ruleTester.run("block-spacing", rule, {
     valid: [
+
         // default/always
         {code: "{ foo(); }", options: ["always"]},
         {code: "{ foo(); }"},
@@ -63,7 +65,9 @@ ruleTester.run("block-spacing", rule, {
         {code: "if (a) {/* comment */ foo(); /* comment */}", options: ["never"]},
         {code: "if (a) { //comment\n foo();}", options: ["never"]}
     ],
+
     invalid: [
+
         // default/always
         {
             code: "{foo();}",

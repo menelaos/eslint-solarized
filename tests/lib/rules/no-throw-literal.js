@@ -18,6 +18,7 @@ var rule = require("../../../lib/rules/no-throw-literal"),
 //------------------------------------------------------------------------------
 
 var ruleTester = new RuleTester();
+
 ruleTester.run("no-throw-literal", rule, {
     valid: [
         "throw new Error();",
@@ -75,6 +76,7 @@ ruleTester.run("no-throw-literal", rule, {
                 type: "ThrowStatement"
             }]
         },
+
         // String concatenation
         {
             code: "throw 'a' + 'b';",
@@ -90,6 +92,7 @@ ruleTester.run("no-throw-literal", rule, {
                 type: "ThrowStatement"
             }]
         },
+
         // AssignmentExpression
         {
             code: "throw foo = 'error';",
@@ -98,6 +101,7 @@ ruleTester.run("no-throw-literal", rule, {
                 type: "ThrowStatement"
             }]
         },
+
         // SequenceExpression
         {
             code: "throw new Error(), 1, 2, 3;",
@@ -106,6 +110,7 @@ ruleTester.run("no-throw-literal", rule, {
                 type: "ThrowStatement"
             }]
         },
+
         // LogicalExpression
         {
             code: "throw 'literal' && 'not an Error';",
@@ -114,6 +119,7 @@ ruleTester.run("no-throw-literal", rule, {
                 type: "ThrowStatement"
             }]
         },
+
         // ConditionalExpression
         {
             code: "throw foo ? 'not an Error' : 'literal';",
@@ -122,6 +128,7 @@ ruleTester.run("no-throw-literal", rule, {
                 type: "ThrowStatement"
             }]
         },
+
         // TemplateLiteral
         {
             code: "throw `${err}`;",

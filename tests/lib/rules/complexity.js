@@ -35,6 +35,7 @@ function createComplexity(complexity) {
 }
 
 var ruleTester = new RuleTester();
+
 ruleTester.run("complexity", rule, {
     valid: [
         { code: "function a(x) {}" },
@@ -59,7 +60,7 @@ ruleTester.run("complexity", rule, {
         { code: "var a = (x) => {do {'foo';} while (true)}", options: [2], parserOptions: { ecmaVersion: 6 } },
 
         // object property options
-        { code: "function b(x) {}", options: [{ "maximum": 1 }] }
+        { code: "function b(x) {}", options: [{ "max": 1 }] }
     ],
     invalid: [
         { code: "function a(x) {}", options: [0], errors: [{ message: "Function 'a' has a complexity of 1."}] },
@@ -92,6 +93,6 @@ ruleTester.run("complexity", rule, {
         },
 
         // object property options
-        { code: "function a(x) {}", options: [{ "maximum": 0 }], errors: [{ message: "Function 'a' has a complexity of 1."}] }
+        { code: "function a(x) {}", options: [{ "max": 0 }], errors: [{ message: "Function 'a' has a complexity of 1."}] }
     ]
 });

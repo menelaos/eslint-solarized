@@ -23,7 +23,9 @@ var OPENING = "foo(function() {",
  * @private
  */
 function nestFunctions(times) {
-    var openings = "", closings = "";
+    var openings = "",
+        closings = "";
+
     for (var i = 0; i < times; i++) {
         openings += OPENING;
         closings += CLOSING;
@@ -35,6 +37,7 @@ function nestFunctions(times) {
 // Tests
 //------------------------------------------------------------------------------
 var ruleTester = new RuleTester();
+
 ruleTester.run("max-nested-callbacks", rule, {
     valid: [
         { code: "foo(function() { bar(thing, function(data) {}); });", options: [3] },
@@ -44,7 +47,7 @@ ruleTester.run("max-nested-callbacks", rule, {
         { code: nestFunctions(10)},
 
         // object property options
-        { code: "foo(function() { bar(thing, function(data) {}); });", options: [{ "maximum": 3 }] }
+        { code: "foo(function() { bar(thing, function(data) {}); });", options: [{ "max": 3 }] }
     ],
     invalid: [
         {
@@ -77,7 +80,7 @@ ruleTester.run("max-nested-callbacks", rule, {
         // object property options
         {
             code: "foo(function() { bar(thing, function(data) { baz(function() {}); }); });",
-            options: [{ "maximum": 2 }],
+            options: [{ "max": 2 }],
             errors: [{ message: "Too many nested callbacks (3). Maximum allowed is 2.", type: "FunctionExpression"}]
         }
     ]

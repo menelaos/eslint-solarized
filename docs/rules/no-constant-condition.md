@@ -20,65 +20,47 @@ The rule is aimed at preventing a constant expression in the test of:
 Examples of **incorrect** code for this rule:
 
 ```js
-/*eslint no-constant-condition: 2*/
+/*eslint no-constant-condition: "error"*/
 
-if (true) {
-    doSomething();
+if (false) {
+    doSomethingUnfinished();
 }
-```
-
-```js
-/*eslint no-constant-condition: 2*/
-
-var result = 0 ? a : b;
-```
-
-```js
-/*eslint no-constant-condition: 2*/
-
-while (-2) {
-    doSomething();
-}
-```
-
-```js
-/*eslint no-constant-condition: 2*/
 
 for (;true;) {
-    doSomething();
+    doSomethingForever();
 }
-```
 
-```js
-/*eslint no-constant-condition: 2*/
+while (-2) {
+    doSomethingForever();
+}
 
 do{
-    something();
-} while (x = -1)
+    doSomethingForever();
+} while (x = -1);
+
+var result = 0 ? a : b;
 ```
 
 Examples of **correct** code for this rule:
 
 ```js
-/*eslint no-constant-condition: 2*/
+/*eslint no-constant-condition: "error"*/
 
 if (x === 0) {
     doSomething();
 }
-```
-
-```js
-/*eslint no-constant-condition: 2*/
-
-do {
-    something();
-} while (x)
-```
-
-```js
-/*eslint no-constant-condition: 2*/
 
 for (;;) {
-    something();
+    doSomethingForever();
 }
+
+while (x) {
+    doSomething();
+}
+
+do{
+    doSomething();
+} while (x);
+
+var result = x !== 0 ? a : b;
 ```

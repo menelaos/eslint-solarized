@@ -46,6 +46,7 @@ function override(keyword, value) {
         after: value.after === false,
         overrides: {}
     };
+
     retv.overrides[keyword] = value;
 
     return retv;
@@ -124,8 +125,10 @@ function unexpectedBeforeAndAfter(keyword) {
 //------------------------------------------------------------------------------
 
 var ruleTester = new RuleTester();
+
 ruleTester.run("keyword-spacing", rule, {
     valid: [
+
         //----------------------------------------------------------------------
         // as
         //----------------------------------------------------------------------
@@ -1196,7 +1199,9 @@ ruleTester.run("keyword-spacing", rule, {
         {code: "function* foo() { <Foo onClick={yield} /> }", parserOptions: {ecmaVersion: 6, ecmaFeatures: {jsx: true}}},
         {code: "function* foo() { <Foo onClick={ yield } /> }", options: [NEITHER], parserOptions: {ecmaVersion: 6, ecmaFeatures: {jsx: true}}}
     ],
+
     invalid: [
+
         //----------------------------------------------------------------------
         // as
         //----------------------------------------------------------------------

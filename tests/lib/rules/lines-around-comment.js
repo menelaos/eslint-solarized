@@ -21,6 +21,7 @@ var afterMessage = "Expected line after comment.",
 //------------------------------------------------------------------------------
 
 var ruleTester = new RuleTester();
+
 ruleTester.run("lines-around-comment", rule, {
 
     valid: [
@@ -157,6 +158,34 @@ ruleTester.run("lines-around-comment", rule, {
             }]
         },
         {
+            code: "switch ('foo'){\ncase 'foo':\n// line at switch case start\nbreak;\n}",
+            options: [{
+                beforeLineComment: true,
+                allowBlockStart: true
+            }]
+        },
+        {
+            code: "switch ('foo'){\ncase 'foo':\n\n// line at switch case start\nbreak;\n}",
+            options: [{
+                beforeLineComment: true,
+                allowBlockStart: true
+            }]
+        },
+        {
+            code: "switch ('foo'){\ncase 'foo':\nbreak;\n\ndefault:\n// line at switch case start\nbreak;\n}",
+            options: [{
+                beforeLineComment: true,
+                allowBlockStart: true
+            }]
+        },
+        {
+            code: "switch ('foo'){\ncase 'foo':\nbreak;\n\ndefault:\n\n// line at switch case start\nbreak;\n}",
+            options: [{
+                beforeLineComment: true,
+                allowBlockStart: true
+            }]
+        },
+        {
             code: "function foo(){   \n/* block comment at block start */\nvar g = 1;\n}",
             options: [{
                 allowBlockStart: true
@@ -202,6 +231,30 @@ ruleTester.run("lines-around-comment", rule, {
             options: [{ allowBlockStart: true }],
             parserOptions: { ecmaVersion: 6 }
         },
+        {
+            code: "switch ('foo'){\ncase 'foo':\n/* block comment at switch case start */\nbreak;\n}",
+            options: [{
+                allowBlockStart: true
+            }]
+        },
+        {
+            code: "switch ('foo'){\ncase 'foo':\n\n/* block comment at switch case start */\nbreak;\n}",
+            options: [{
+                allowBlockStart: true
+            }]
+        },
+        {
+            code: "switch ('foo'){\ncase 'foo':\nbreak;\n\ndefault:\n/* block comment at switch case start */\nbreak;\n}",
+            options: [{
+                allowBlockStart: true
+            }]
+        },
+        {
+            code: "switch ('foo'){\ncase 'foo':\nbreak;\n\ndefault:\n\n/* block comment at switch case start */\nbreak;\n}",
+            options: [{
+                allowBlockStart: true
+            }]
+        },
 
         // check for block end comments
         {
@@ -241,6 +294,34 @@ ruleTester.run("lines-around-comment", rule, {
         },
         {
             code: "if(true){\nvar g = 1;\n\n// line at block end\n}",
+            options: [{
+                afterLineComment: true,
+                allowBlockEnd: true
+            }]
+        },
+        {
+            code: "switch ('foo'){\ncase 'foo':\nvar g = 1;\n\n// line at switch case end\n}",
+            options: [{
+                afterLineComment: true,
+                allowBlockEnd: true
+            }]
+        },
+        {
+            code: "switch ('foo'){\ncase 'foo':\nvar g = 1;\n\n// line at switch case end\n\n}",
+            options: [{
+                afterLineComment: true,
+                allowBlockEnd: true
+            }]
+        },
+        {
+            code: "switch ('foo'){\ncase 'foo':\nbreak;\n\ndefault:\nvar g = 1;\n\n// line at switch case end\n}",
+            options: [{
+                afterLineComment: true,
+                allowBlockEnd: true
+            }]
+        },
+        {
+            code: "switch ('foo'){\ncase 'foo':\nbreak;\n\ndefault:\nvar g = 1;\n\n// line at switch case end\n\n}",
             options: [{
                 afterLineComment: true,
                 allowBlockEnd: true
@@ -338,6 +419,34 @@ ruleTester.run("lines-around-comment", rule, {
                 allowBlockEnd: true
             }],
             parserOptions: { ecmaVersion: 6 }
+        },
+        {
+            code: "switch ('foo'){\ncase 'foo':\nvar g = 1;\n\n/* block comment at switch case end */\n}",
+            options: [{
+                afterBlockComment: true,
+                allowBlockEnd: true
+            }]
+        },
+        {
+            code: "switch ('foo'){\ncase 'foo':\nvar g = 1;\n\n/* block comment at switch case end */\n\n}",
+            options: [{
+                afterBlockComment: true,
+                allowBlockEnd: true
+            }]
+        },
+        {
+            code: "switch ('foo'){\ncase 'foo':\nbreak;\n\ndefault:\nvar g = 1;\n\n/* block comment at switch case end */\n}",
+            options: [{
+                afterBlockComment: true,
+                allowBlockEnd: true
+            }]
+        },
+        {
+            code: "switch ('foo'){\ncase 'foo':\nbreak;\n\ndefault:\nvar g = 1;\n\n/* block comment at switch case end */\n\n}",
+            options: [{
+                afterBlockComment: true,
+                allowBlockEnd: true
+            }]
         },
 
         // check for object start comments
@@ -776,6 +885,20 @@ ruleTester.run("lines-around-comment", rule, {
             errors: [{ message: afterMessage, type: "Line", line: 4 }]
         },
         {
+            code: "switch ('foo'){\ncase 'foo':\n// line at switch case start\nbreak;\n}",
+            options: [{
+                beforeLineComment: true
+            }],
+            errors: [{ message: beforeMessage, type: "Line", line: 3 }]
+        },
+        {
+            code: "switch ('foo'){\ncase 'foo':\nbreak;\n\ndefault:\n// line at switch case start\nbreak;\n}",
+            options: [{
+                beforeLineComment: true
+            }],
+            errors: [{ message: beforeMessage, type: "Line", line: 6 }]
+        },
+        {
             code: "while(true){\n// line at block start and end\n}",
             options: [{
                 afterLineComment: true,
@@ -790,6 +913,20 @@ ruleTester.run("lines-around-comment", rule, {
                 allowBlockEnd: true
             }],
             errors: [{ message: beforeMessage, type: "Line", line: 2 }]
+        },
+        {
+            code: "switch ('foo'){\ncase 'foo':\nvar g = 1;\n\n// line at switch case end\n}",
+            options: [{
+                afterLineComment: true
+            }],
+            errors: [{ message: afterMessage, type: "Line", line: 5 }]
+        },
+        {
+            code: "switch ('foo'){\ncase 'foo':\nbreak;\n\ndefault:\nvar g = 1;\n\n// line at switch case end\n}",
+            options: [{
+                afterLineComment: true
+            }],
+            errors: [{ message: afterMessage, type: "Line", line: 8 }]
         },
 
         // object start comments

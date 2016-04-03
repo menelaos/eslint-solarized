@@ -16,8 +16,10 @@ var rule = require("../../../lib/rules/yoda"),
 //------------------------------------------------------------------------------
 
 var ruleTester = new RuleTester();
+
 ruleTester.run("yoda", rule, {
     valid: [
+
         // "never" mode
         { code: "if (value === \"red\") {}", options: ["never"] },
         { code: "if (value === value) {}", options: ["never"] },
