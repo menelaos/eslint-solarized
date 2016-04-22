@@ -1,8 +1,6 @@
 /**
  * @fileoverview Tests for no-self-assign rule.
  * @author Toru Nagashima
- * @copyright 2065 Toru Nagashima. All rights reserved.
- * See LICENSE file in root directory for full license.
  */
 
 "use strict";
@@ -40,10 +38,8 @@ ruleTester.run("no-self-assign", rule, {
         {code: "({a: b} = {a})", parserOptions: {ecmaVersion: 6}},
         {code: "({a} = {a: b})", parserOptions: {ecmaVersion: 6}},
         {code: "({a} = {a() {}})", parserOptions: {ecmaVersion: 6}},
-        {code: "({a} = {[a]: a})", parserOptions: {ecmaVersion: 6}}
-
-        // TODO: https://github.com/eslint/espree/issues/247
-        // {code: "({a, ...b} = {a, ...b})", parserOptions: {ecmaVersion: 6, ecmaFeatures: {experimentalObjectRestSpread: true}}},
+        {code: "({a} = {[a]: a})", parserOptions: {ecmaVersion: 6}},
+        {code: "({a, ...b} = {a, ...b})", parserOptions: {ecmaVersion: 6, ecmaFeatures: {experimentalObjectRestSpread: true}}}
     ],
     invalid: [
         {code: "a = a", errors: ["'a' is assigned to itself."]},

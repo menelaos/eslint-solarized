@@ -1,8 +1,6 @@
 /**
  * @fileoverview Abstraction of JavaScript source code.
  * @author Nicholas C. Zakas
- * @copyright 2015 Nicholas C. Zakas. All rights reserved.
- * See LICENSE file in root directory for full license.
  */
 "use strict";
 
@@ -930,6 +928,22 @@ describe("SourceCode", function() {
             eslint.verify(code, config, "", true);
         });
 
+        it("should not attach duplicate leading comments from previous node", function() {
+            var code = [
+                "//foo",
+                "var zzz /*aaa*/ = 777;",
+                "//bar"
+            ].join("\n");
+
+            eslint.reset();
+            eslint.on("Program", assertCommentCount(0, 0));
+            eslint.on("VariableDeclaration", assertCommentCount(1, 1));
+            eslint.on("VariableDeclarator", assertCommentCount(0, 0));
+            eslint.on("Identifier", assertCommentCount(0, 1));
+            eslint.on("Literal", assertCommentCount(1, 0));
+
+            eslint.verify(code, config, "", true);
+        });
     });
 
     describe("getLines()", function() {

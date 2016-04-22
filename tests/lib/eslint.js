@@ -1,8 +1,6 @@
 /**
  * @fileoverview Tests for eslint object.
  * @author Nicholas C. Zakas
- * @copyright 2013 Nicholas C. Zakas. All rights reserved.
- * See LICENSE file in root directory for full license.
  */
 /* globals window */
 
@@ -3175,21 +3173,6 @@ describe("eslint", function() {
             var messages = eslint.verify(code, { parserOptions: { ecmaVersion: 6, ecmaFeatures: { jsx: true }}}, "filename");
 
             assert.equal(messages.length, 0);
-        });
-
-        // TODO: Remove when escope is updated
-        it("should not crash due to no-undef mutating escope data", function() {
-            var code = "import foo from 'bar';";
-
-            eslint.verify(code, {
-                parserOptions: {
-                    sourceType: "module"
-                },
-                rules: {
-                    "no-undef": 2,
-                    "no-unused-vars": 2
-                }
-            }, "filename");
         });
 
         it("should be able to use es6 features if there is a comment which has \"eslint-env es6\"", function() {

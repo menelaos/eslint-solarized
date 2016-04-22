@@ -1,8 +1,6 @@
 /**
  * @fileoverview Build file
  * @author nzakas
- * @copyright jQuery Foundation and other contributors, https://jquery.org/
- * MIT License
  */
 
 /* global cat, cd, cp, echo, exec, exit, find, ls, mkdir, pwd, rm, target, test*/
@@ -72,7 +70,7 @@ var NODE = "node ", // intentional extra space
     PERF_MULTIFILES_TARGETS = PERF_MULTIFILES_TARGET_DIR + path.sep + "{lib,tests" + path.sep + "lib}" + path.sep + "**" + path.sep + "*.js",
 
     // Regex
-    TAG_REGEX = /^(?:Fix|Update|Breaking|Docs|Build|New|Upgrade):/,
+    TAG_REGEX = /^(?:Breaking|Build|Chore|Docs|Fix|New|Update|Upgrade):/,
     ISSUE_REGEX = /\((?:fixes|refs) #\d+(?:.*(?:fixes|refs) #\d+)*\)$/,
 
     // Settings
@@ -916,6 +914,7 @@ target.checkGitCommit = function() {
                 "    'Build:'",
                 "    'New:'",
                 "    'Upgrade:'",
+                "    'Chore:'",
                 "   Please refer to the contribution guidelines for more details."].join("\n"));
             failed = true;
         }

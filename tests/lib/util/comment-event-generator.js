@@ -1,8 +1,6 @@
 /**
  * @fileoverview Tests for CommentEventGenerator.
  * @author Toru Nagashima
- * @copyright 2015 Toru Nagashima. All rights reserved.
- * See LICENSE file in root directory for full license.
  */
 "use strict";
 
@@ -54,10 +52,10 @@ describe("NodeEventGenerator", function() {
             ["Identifier:exit", ast.body[0].declarations[0].id],
             ["Literal", ast.body[0].declarations[0].init],
             ["Literal:exit", ast.body[0].declarations[0].init],
-            ["LineComment:exit", ast.comments[0]], // foo
             ["VariableDeclarator:exit", ast.body[0].declarations[0]],
             ["LineComment:exit", ast.comments[2]], // bar
             ["VariableDeclaration:exit", ast.body[0]],
+            ["LineComment:exit", ast.comments[0]], // foo
             ["Program:exit", ast]
         ];
 
