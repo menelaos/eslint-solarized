@@ -4,7 +4,7 @@
  */
 
 /* global cat, cd, cp, echo, exec, exit, find, ls, mkdir, pwd, rm, target, test*/
-/* eslint no-use-before-define: 0*/
+/* eslint no-use-before-define: "off", no-console: "off" */
 "use strict";
 
 //------------------------------------------------------------------------------
@@ -391,12 +391,12 @@ function getFormatterResults() {
     var formatterFiles = fs.readdirSync("./lib/formatters/"),
         cli = new CLIEngine({
             useEslintrc: false,
-            baseConfig: { "extends": "eslint:recommended" },
+            baseConfig: { extends: "eslint:recommended" },
             rules: {
                 "no-else-return": 1,
-                "indent": [1, 4],
+                indent: [1, 4],
                 "space-unary-ops": 2,
-                "semi": [1, "always"],
+                semi: [1, "always"],
                 "consistent-return": 2
             }
         }),
