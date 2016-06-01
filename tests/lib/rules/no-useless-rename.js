@@ -40,12 +40,36 @@ ruleTester.run("no-useless-rename", rule, {
         { code: "({foo: bar}) => {}", parserOptions: { ecmaVersion: 6 } },
         { code: "({foo: bar, baz: qui}) => {}", parserOptions: { ecmaVersion: 6 } },
         { code: "import * as foo from 'foo';", parserOptions: { ecmaVersion: 6, sourceType: "module" } },
+        { code: "import foo from 'foo';", parserOptions: { ecmaVersion: 6, sourceType: "module" } },
+        { code: "import {foo} from 'foo';", parserOptions: { ecmaVersion: 6, sourceType: "module" } },
         { code: "import {foo as bar} from 'foo';", parserOptions: { ecmaVersion: 6, sourceType: "module" } },
         { code: "import {foo as bar, baz as qux} from 'foo';", parserOptions: { ecmaVersion: 6, sourceType: "module" } },
+        { code: "export {foo} from 'foo';", parserOptions: { ecmaVersion: 6, sourceType: "module" } },
         { code: "export {foo as bar};", parserOptions: { ecmaVersion: 6, sourceType: "module" } },
         { code: "export {foo as bar, baz as qux};", parserOptions: { ecmaVersion: 6, sourceType: "module" } },
         { code: "export {foo as bar} from 'foo';", parserOptions: { ecmaVersion: 6, sourceType: "module" } },
         { code: "export {foo as bar, baz as qux} from 'foo';", parserOptions: { ecmaVersion: 6, sourceType: "module" } },
+        {
+            code: "const {...stuff} = myObject;",
+            parserOptions: {
+                ecmaFeatures: { experimentalObjectRestSpread: true },
+                ecmaVersion: 6
+            }
+        },
+        {
+            code: "const {foo, ...stuff} = myObject;",
+            parserOptions: {
+                ecmaFeatures: { experimentalObjectRestSpread: true },
+                ecmaVersion: 6
+            }
+        },
+        {
+            code: "const {foo: bar, ...stuff} = myObject;",
+            parserOptions: {
+                ecmaFeatures: { experimentalObjectRestSpread: true },
+                ecmaVersion: 6
+            }
+        },
 
         // { ignoreDestructuring: true }
         {
@@ -233,6 +257,33 @@ ruleTester.run("no-useless-rename", rule, {
             code: "({foo: foo, bar: bar}) => {}",
             output: "({foo, bar}) => {}",
             parserOptions: { ecmaVersion: 6 },
+            errors: ["Destructuring assignment foo unnecessarily renamed.", "Destructuring assignment bar unnecessarily renamed."]
+        },
+        {
+            code: "const {foo: foo, ...stuff} = myObject;",
+            output: "const {foo, ...stuff} = myObject;",
+            parserOptions: {
+                ecmaFeatures: { experimentalObjectRestSpread: true },
+                ecmaVersion: 6
+            },
+            errors: ["Destructuring assignment foo unnecessarily renamed."]
+        },
+        {
+            code: "const {foo: foo, bar: baz, ...stuff} = myObject;",
+            output: "const {foo, bar: baz, ...stuff} = myObject;",
+            parserOptions: {
+                ecmaFeatures: { experimentalObjectRestSpread: true },
+                ecmaVersion: 6
+            },
+            errors: ["Destructuring assignment foo unnecessarily renamed."]
+        },
+        {
+            code: "const {foo: foo, bar: bar, ...stuff} = myObject;",
+            output: "const {foo, bar, ...stuff} = myObject;",
+            parserOptions: {
+                ecmaFeatures: { experimentalObjectRestSpread: true },
+                ecmaVersion: 6
+            },
             errors: ["Destructuring assignment foo unnecessarily renamed.", "Destructuring assignment bar unnecessarily renamed."]
         },
         {
