@@ -168,12 +168,13 @@ These rules relate to style guidelines, and are therefore quite subjective:
 * [id-match](id-match.md): require identifiers to match a specified regular expression
 * [indent](indent.md): enforce consistent indentation (fixable)
 * [jsx-quotes](jsx-quotes.md): enforce the consistent use of either double or single quotes in JSX attributes (fixable)
-* [key-spacing](key-spacing.md): enforce consistent spacing between keys and values in object literal properties
+* [key-spacing](key-spacing.md): enforce consistent spacing between keys and values in object literal properties (fixable)
 * [keyword-spacing](keyword-spacing.md): enforce consistent spacing before and after keywords (fixable)
 * [linebreak-style](linebreak-style.md): enforce consistent linebreak style (fixable)
 * [lines-around-comment](lines-around-comment.md): require empty lines around comments
 * [max-depth](max-depth.md): enforce a maximum depth that blocks can be nested
 * [max-len](max-len.md): enforce a maximum line length
+* [max-lines](max-lines.md): enforce a maximum file length
 * [max-nested-callbacks](max-nested-callbacks.md): enforce a maximum depth that callbacks can be nested
 * [max-params](max-params.md): enforce a maximum number of parameters in `function` definitions
 * [max-statements](max-statements.md): enforce a maximum number of statements allowed in `function` blocks
@@ -188,6 +189,7 @@ These rules relate to style guidelines, and are therefore quite subjective:
 * [no-continue](no-continue.md): disallow `continue` statements
 * [no-inline-comments](no-inline-comments.md): disallow inline comments after code
 * [no-lonely-if](no-lonely-if.md): disallow `if` statements as the only statement in `else` blocks
+* [no-mixed-operators](no-mixed-operators.md): disallow mixes of different operators
 * [no-mixed-spaces-and-tabs](no-mixed-spaces-and-tabs.md): disallow mixed spaces and tabs for indentation (recommended)
 * [no-multiple-empty-lines](no-multiple-empty-lines.md): disallow multiple empty lines
 * [no-negated-condition](no-negated-condition.md): disallow negated conditions
