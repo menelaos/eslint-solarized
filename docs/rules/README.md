@@ -10,7 +10,6 @@ The `--fix` option on the [command line](../user-guide/command-line-interface#fi
 
 These rules relate to possible syntax or logic errors in JavaScript code:
 
-* [comma-dangle](comma-dangle.md): require or disallow trailing commas (fixable)
 * [no-cond-assign](no-cond-assign.md): disallow assignment operators in conditional expressions (recommended)
 * [no-console](no-console.md): disallow the use of `console` (recommended)
 * [no-constant-condition](no-constant-condition.md): disallow constant expressions in conditions (recommended)
@@ -156,6 +155,7 @@ These rules relate to style guidelines, and are therefore quite subjective:
 * [block-spacing](block-spacing.md): enforce consistent spacing inside single-line blocks (fixable)
 * [brace-style](brace-style.md): enforce consistent brace style for blocks
 * [camelcase](camelcase.md): enforce camelcase naming convention
+* [comma-dangle](comma-dangle.md): require or disallow trailing commas (fixable)
 * [comma-spacing](comma-spacing.md): enforce consistent spacing before and after commas (fixable)
 * [comma-style](comma-style.md): enforce consistent comma style
 * [computed-property-spacing](computed-property-spacing.md): enforce consistent spacing inside computed property brackets (fixable)
@@ -249,7 +249,7 @@ These rules relate to ES6, also known as ES2015:
 * [no-var](no-var.md): require `let` or `const` instead of `var`
 * [object-shorthand](object-shorthand.md): require or disallow method and property shorthand syntax for object literals (fixable)
 * [prefer-arrow-callback](prefer-arrow-callback.md): require arrow functions as callbacks
-* [prefer-const](prefer-const.md): require `const` declarations for variables that are never reassigned after declared
+* [prefer-const](prefer-const.md): require `const` declarations for variables that are never reassigned after declared (fixable)
 * [prefer-reflect](prefer-reflect.md): require `Reflect` methods where applicable
 * [prefer-rest-params](prefer-rest-params.md): require rest parameters instead of `arguments`
 * [prefer-spread](prefer-spread.md): require spread operators instead of `.apply()`
