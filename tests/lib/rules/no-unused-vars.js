@@ -125,6 +125,20 @@ ruleTester.run("no-unused-vars", rule, {
         { code: "function foo(a, _b) { return a; } foo();", options: [ { args: "after-used", argsIgnorePattern: "^_" } ] },
         { code: "var [ firstItemIgnored, secondItem ] = items;\nconsole.log(secondItem);", parserOptions: { ecmaVersion: 6 }, options: [ { vars: "all", varsIgnorePattern: "[iI]gnored" } ] },
 
+        // for-in loops (see #2342)
+        "(function(obj) { var name; for ( name in obj ) return; })({});",
+        "(function(obj) { var name; for ( name in obj ) { return; } })({});",
+        "(function(obj) { for ( var name in obj ) { return true } })({})",
+        "(function(obj) { for ( var name in obj ) return true })({})",
+
+        { code: "(function(obj) { let name; for ( name in obj ) return; })({});", parserOptions: { ecmaVersion: 6 }},
+        { code: "(function(obj) { let name; for ( name in obj ) { return; } })({});", parserOptions: { ecmaVersion: 6 }},
+        { code: "(function(obj) { for ( let name in obj ) { return true } })({})", parserOptions: { ecmaVersion: 6 }},
+        { code: "(function(obj) { for ( let name in obj ) return true })({})", parserOptions: { ecmaVersion: 6 }},
+
+        { code: "(function(obj) { for ( const name in obj ) { return true } })({})", parserOptions: { ecmaVersion: 6 }},
+        { code: "(function(obj) { for ( const name in obj ) return true })({})", parserOptions: { ecmaVersion: 6 }},
+
         // caughtErrors
         {
             code: "try{}catch(err){console.error(err);}",
@@ -151,7 +165,41 @@ ruleTester.run("no-unused-vars", rule, {
         {code: "var a = 0, b; b = a++; foo(b);"},
         {code: "function foo(a) { var b = a = a + 1; bar(b) } foo();"},
         {code: "function foo(a) { var b = a += a + 1; bar(b) } foo();"},
-        {code: "function foo(a) { var b = a++; bar(b) } foo();"}
+        {code: "function foo(a) { var b = a++; bar(b) } foo();"},
+
+        // https://github.com/eslint/eslint/issues/6576
+        {
+            code: [
+                "var unregisterFooWatcher;",
+                "// ...",
+                "unregisterFooWatcher = $scope.$watch( \"foo\", function() {",
+                "    // ...some code..",
+                "    unregisterFooWatcher();",
+                "});"
+            ].join("\n")
+        },
+        {
+            code: [
+                "var ref;",
+                "ref = setInterval(",
+                "    function(){",
+                "        clearInterval(ref);",
+                "    }, 10);",
+            ].join("\n")
+        },
+        {
+            code: [
+                "var _timer;",
+                "function f() {",
+                "    _timer = setTimeout(function () {}, _timer ? 100 : 0);",
+                "}",
+                "f();",
+            ].join("\n")
+        },
+        {code: "function foo(cb) { cb = function() { function something(a) { cb(1 + a); } register(something); }(); } foo();"},
+        {code: "function* foo(cb) { cb = yield function(a) { cb(1 + a); }; } foo();", parserOptions: {ecmaVersion: 6}},
+        {code: "function foo(cb) { cb = tag`hello${function(a) { cb(1 + a); }}`; } foo();", parserOptions: {ecmaVersion: 6}},
+        {code: "function foo(cb) { var b; cb = b = function(a) { cb(1 + a); }; b(); } foo();"}
     ],
     invalid: [
         { code: "function foox() { return foox(); }", errors: [{ message: "'foox' is defined but never used", type: "Identifier"}] },
@@ -197,6 +245,11 @@ ruleTester.run("no-unused-vars", rule, {
         { code: "function foo(a, _b) { } foo();", options: [ { args: "all", argsIgnorePattern: "^_" } ], errors: [{ message: "'a' is defined but never used", line: 1, column: 14 }] },
         { code: "function foo(a, _b, c) { return a; } foo();", options: [ { args: "after-used", argsIgnorePattern: "^_" } ], errors: [{ message: "'c' is defined but never used", line: 1, column: 21 }] },
         { code: "var [ firstItemIgnored, secondItem ] = items;", parserOptions: { ecmaVersion: 6 }, options: [ { vars: "all", varsIgnorePattern: "[iI]gnored" } ], errors: [{ message: "'secondItem' is defined but never used", line: 1, column: 25 }] },
+
+        // for-in loops (see #2342)
+        { code: "(function(obj) { var name; for ( name in obj ) { i(); return; } })({});", errors: [{ message: "'name' is defined but never used", line: 1, column: 22 }] },
+        { code: "(function(obj) { var name; for ( name in obj ) { } })({});", errors: [{ message: "'name' is defined but never used", line: 1, column: 22 }] },
+        { code: "(function(obj) { for ( var name in obj ) { } })({});", errors: [{ message: "'name' is defined but never used", line: 1, column: 28 }] },
 
         // https://github.com/eslint/eslint/issues/3617
         {
@@ -354,6 +407,24 @@ ruleTester.run("no-unused-vars", rule, {
         {code: "function foo(a) { a += a + 1 } foo();", errors: [{message: "'a' is defined but never used"}]},
         {code: "function foo(a) { a++ } foo();", errors: [{message: "'a' is defined but never used"}]},
         {code: "var a = 3; a = a * 5 + 6;", errors: [{message: "'a' is defined but never used"}]},
-        {code: "var a = 2, b = 4; a = a * 2 + b;", errors: [{message: "'a' is defined but never used"}]}
+        {code: "var a = 2, b = 4; a = a * 2 + b;", errors: [{message: "'a' is defined but never used"}]},
+
+        // https://github.com/eslint/eslint/issues/6576 (For coverage)
+        {
+            code: "function foo(cb) { cb = function(a) { cb(1 + a); }; bar(not_cb); } foo();",
+            errors: [{message: "'cb' is defined but never used"}]
+        },
+        {
+            code: "function foo(cb) { cb = function(a) { return cb(1 + a); }(); } foo();",
+            errors: [{message: "'cb' is defined but never used"}]
+        },
+        {
+            code: "function foo(cb) { cb = (function(a) { cb(1 + a); }, cb); } foo();",
+            errors: [{message: "'cb' is defined but never used"}]
+        },
+        {
+            code: "function foo(cb) { cb = (0, function(a) { cb(1 + a); }); } foo();",
+            errors: [{message: "'cb' is defined but never used"}]
+        }
     ]
 });
