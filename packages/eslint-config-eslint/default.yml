@@ -72,6 +72,7 @@ rules:
     no-shadow: "error"
     no-shadow-restricted-names: "error"
     no-spaced-func: "error"
+    no-tabs: "error"
     no-trailing-spaces: "error"
     no-undef: "error"
     no-undef-init: "error"
@@ -85,6 +86,7 @@ rules:
     no-useless-concat: "error"
     no-useless-constructor: "error"
     no-with: "error"
+    no-var: "error"
     one-var-declaration-per-line: "error"
     quotes: ["error", "double"]
     quote-props: ["error", "as-needed"]

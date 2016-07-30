@@ -9,14 +9,14 @@
 // Requirements
 //------------------------------------------------------------------------------
 
-var rule = require("../../../lib/rules/no-underscore-dangle"),
+let rule = require("../../../lib/rules/no-underscore-dangle"),
     RuleTester = require("../../../lib/testers/rule-tester");
 
 //------------------------------------------------------------------------------
 // Tests
 //------------------------------------------------------------------------------
 
-var ruleTester = new RuleTester();
+let ruleTester = new RuleTester();
 
 ruleTester.run("no-underscore-dangle", rule, {
     valid: [
@@ -43,6 +43,6 @@ ruleTester.run("no-underscore-dangle", rule, {
         { code: "foo._bar;", errors: [{ message: "Unexpected dangling '_' in '_bar'.", type: "MemberExpression"}] },
         { code: "this._prop;", errors: [{ message: "Unexpected dangling '_' in '_prop'.", type: "MemberExpression"}] },
         { code: "class foo { constructor() { super._prop; } }", parserOptions: { ecmaVersion: 6 }, errors: [{ message: "Unexpected dangling '_' in '_prop'.", type: "MemberExpression"}] },
-		{ code: "class foo { constructor() { this._prop; } }", options: [{allowAfterSuper: true}], parserOptions: { ecmaVersion: 6 }, errors: [{ message: "Unexpected dangling '_' in '_prop'.", type: "MemberExpression"}] }
+        { code: "class foo { constructor() { this._prop; } }", options: [{allowAfterSuper: true}], parserOptions: { ecmaVersion: 6 }, errors: [{ message: "Unexpected dangling '_' in '_prop'.", type: "MemberExpression"}] }
     ]
 });

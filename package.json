@@ -1,6 +1,6 @@
 {
   "name": "eslint",
-  "version": "3.1.1",
+  "version": "3.2.0",
   "author": "Nicholas C. Zakas <nicholas+npm@nczconsulting.com>",
   "description": "An AST-based pattern checker for JavaScript.",
   "bin": {
@@ -88,13 +88,14 @@
     "istanbul": "^0.4.0",
     "jsdoc": "^3.3.0-beta1",
     "karma": "^0.13.22",
+    "karma-babel-preprocessor": "^6.0.1",
     "karma-mocha": "^1.0.1",
     "karma-mocha-reporter": "^2.0.3",
     "karma-phantomjs-launcher": "^1.0.0",
     "leche": "^2.1.1",
     "linefix": "^0.1.1",
     "load-perf": "^0.2.0",
-    "markdownlint": "^0.1.0",
+    "markdownlint": "^0.2.0",
     "mocha": "^2.4.5",
     "mock-fs": "^3.10.0",
     "npm-license": "^0.3.2",
