@@ -9,14 +9,14 @@
 // Requirements
 //------------------------------------------------------------------------------
 
-let rule = require("../../../lib/rules/no-continue"),
+const rule = require("../../../lib/rules/no-continue"),
     RuleTester = require("../../../lib/testers/rule-tester");
 
 //------------------------------------------------------------------------------
 // Tests
 //------------------------------------------------------------------------------
 
-let ruleTester = new RuleTester();
+const ruleTester = new RuleTester();
 
 ruleTester.run("no-continue", rule, {
     valid: [
@@ -27,22 +27,22 @@ ruleTester.run("no-continue", rule, {
     invalid: [
         {
             code: "var sum = 0, i; for(i = 0; i < 10; i++){ if(i <= 5) { continue; } sum += i; }",
-            errors: [{ message: "Unexpected use of continue statement",
+            errors: [{ message: "Unexpected use of continue statement.",
             type: "ContinueStatement"}]
         },
         {
             code: "var sum = 0, i; myLabel: for(i = 0; i < 10; i++){ if(i <= 5) { continue myLabel; } sum += i; }",
-            errors: [{ message: "Unexpected use of continue statement",
+            errors: [{ message: "Unexpected use of continue statement.",
             type: "ContinueStatement"}]
         },
         {
             code: "var sum = 0, i = 0; while(i < 10) { if(i <= 5) { i++; continue; } sum += i; i++; }",
-            errors: [{ message: "Unexpected use of continue statement",
+            errors: [{ message: "Unexpected use of continue statement.",
             type: "ContinueStatement"}]
         },
         {
             code: "var sum = 0, i = 0; myLabel: while(i < 10) { if(i <= 5) { i++; continue myLabel; } sum += i; i++; }",
-            errors: [{ message: "Unexpected use of continue statement",
+            errors: [{ message: "Unexpected use of continue statement.",
             type: "ContinueStatement"}]
         }
     ]

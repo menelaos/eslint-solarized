@@ -9,14 +9,14 @@
 // Requirements
 //------------------------------------------------------------------------------
 
-let rule = require("../../../lib/rules/no-restricted-globals"),
+const rule = require("../../../lib/rules/no-restricted-globals"),
     RuleTester = require("../../../lib/testers/rule-tester");
 
 //------------------------------------------------------------------------------
 // Tests
 //------------------------------------------------------------------------------
 
-let ruleTester = new RuleTester();
+const ruleTester = new RuleTester();
 
 ruleTester.run("no-restricted-globals", rule, {
     valid: [
@@ -32,34 +32,34 @@ ruleTester.run("no-restricted-globals", rule, {
     invalid: [
         {
             code: "foo", options: ["foo"],
-            errors: [{ message: "Unexpected use of 'foo'", type: "Identifier"}]
+            errors: [{ message: "Unexpected use of 'foo'.", type: "Identifier"}]
         },
         {
             code: "function fn() { foo; }", options: ["foo"],
-            errors: [{ message: "Unexpected use of 'foo'", type: "Identifier"}]
+            errors: [{ message: "Unexpected use of 'foo'.", type: "Identifier"}]
         },
         {
             code: "function fn() { foo; }", options: ["foo"],
             globals: {foo: false},
-            errors: [{ message: "Unexpected use of 'foo'", type: "Identifier"}]
+            errors: [{ message: "Unexpected use of 'foo'.", type: "Identifier"}]
         },
         {
             code: "event", options: ["foo", "event"],
             env: { browser: true },
-            errors: [{ message: "Unexpected use of 'event'", type: "Identifier"}]
+            errors: [{ message: "Unexpected use of 'event'.", type: "Identifier"}]
         },
         {
             code: "foo", options: ["foo"],
             globals: {foo: false},
-            errors: [{ message: "Unexpected use of 'foo'", type: "Identifier"}]
+            errors: [{ message: "Unexpected use of 'foo'.", type: "Identifier"}]
         },
         {
             code: "foo()", options: ["foo"],
-            errors: [{ message: "Unexpected use of 'foo'", type: "Identifier"}]
+            errors: [{ message: "Unexpected use of 'foo'.", type: "Identifier"}]
         },
         {
             code: "foo.bar()", options: ["foo"],
-            errors: [{ message: "Unexpected use of 'foo'", type: "Identifier"}]
+            errors: [{ message: "Unexpected use of 'foo'.", type: "Identifier"}]
         }
     ]
 });

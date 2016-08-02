@@ -9,14 +9,14 @@
 // Requirements
 //------------------------------------------------------------------------------
 
-let rule = require("../../../lib/rules/no-unneeded-ternary"),
+const rule = require("../../../lib/rules/no-unneeded-ternary"),
     RuleTester = require("../../../lib/testers/rule-tester");
 
 //------------------------------------------------------------------------------
 // Tests
 //------------------------------------------------------------------------------
 
-let ruleTester = new RuleTester();
+const ruleTester = new RuleTester();
 
 ruleTester.run("no-unneeded-ternary", rule, {
     valid: [
@@ -39,7 +39,7 @@ ruleTester.run("no-unneeded-ternary", rule, {
         {
             code: "var a = x === 2 ? true : false;",
             errors: [{
-                message: "Unnecessary use of boolean literals in conditional expression",
+                message: "Unnecessary use of boolean literals in conditional expression.",
                 type: "ConditionalExpression",
                 line: 1,
                 column: 19
@@ -49,7 +49,7 @@ ruleTester.run("no-unneeded-ternary", rule, {
             code: "var a = foo ? foo : 'No';",
             options: [{defaultAssignment: false}],
             errors: [{
-                message: "Unnecessary use of conditional expression for default assignment",
+                message: "Unnecessary use of conditional expression for default assignment.",
                 type: "ConditionalExpression",
                 line: 1,
                 column: 15

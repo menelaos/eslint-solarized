@@ -9,16 +9,16 @@
 // Requirements
 //------------------------------------------------------------------------------
 
-let rule = require("../../../lib/rules/sort-vars"),
+const rule = require("../../../lib/rules/sort-vars"),
     RuleTester = require("../../../lib/testers/rule-tester");
 
 //------------------------------------------------------------------------------
 // Tests
 //------------------------------------------------------------------------------
 
-let ruleTester = new RuleTester(),
+const ruleTester = new RuleTester(),
     expectedError = {
-        message: "Variables within the same declaration block should be sorted alphabetically",
+        message: "Variables within the same declaration block should be sorted alphabetically.",
         type: "VariableDeclarator"
     },
     ignoreCaseArgs = [ { ignoreCase: true } ];

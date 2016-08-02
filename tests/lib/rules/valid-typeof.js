@@ -8,14 +8,14 @@
 // Requirements
 //------------------------------------------------------------------------------
 
-let rule = require("../../../lib/rules/valid-typeof"),
+const rule = require("../../../lib/rules/valid-typeof"),
     RuleTester = require("../../../lib/testers/rule-tester");
 
 //------------------------------------------------------------------------------
 // Tests
 //------------------------------------------------------------------------------
 
-let ruleTester = new RuleTester();
+const ruleTester = new RuleTester();
 
 ruleTester.run("valid-typeof", rule, {
 
@@ -49,51 +49,51 @@ ruleTester.run("valid-typeof", rule, {
     invalid: [
         {
             code: "typeof foo === 'strnig'",
-            errors: [{ message: "Invalid typeof comparison value", type: "Literal" }]
+            errors: [{ message: "Invalid typeof comparison value.", type: "Literal" }]
         },
         {
             code: "'strnig' === typeof foo",
-            errors: [{ message: "Invalid typeof comparison value", type: "Literal" }]
+            errors: [{ message: "Invalid typeof comparison value.", type: "Literal" }]
         },
         {
             code: "if (typeof bar === 'umdefined') {}",
-            errors: [{ message: "Invalid typeof comparison value", type: "Literal" }]
+            errors: [{ message: "Invalid typeof comparison value.", type: "Literal" }]
         },
         {
             code: "typeof foo !== 'strnig'",
-            errors: [{ message: "Invalid typeof comparison value", type: "Literal" }]
+            errors: [{ message: "Invalid typeof comparison value.", type: "Literal" }]
         },
         {
             code: "'strnig' !== typeof foo",
-            errors: [{ message: "Invalid typeof comparison value", type: "Literal" }]
+            errors: [{ message: "Invalid typeof comparison value.", type: "Literal" }]
         },
         {
             code: "if (typeof bar !== 'umdefined') {}",
-            errors: [{ message: "Invalid typeof comparison value", type: "Literal" }]
+            errors: [{ message: "Invalid typeof comparison value.", type: "Literal" }]
         },
         {
             code: "typeof foo != 'strnig'",
-            errors: [{ message: "Invalid typeof comparison value", type: "Literal" }]
+            errors: [{ message: "Invalid typeof comparison value.", type: "Literal" }]
         },
         {
             code: "'strnig' != typeof foo",
-            errors: [{ message: "Invalid typeof comparison value", type: "Literal" }]
+            errors: [{ message: "Invalid typeof comparison value.", type: "Literal" }]
         },
         {
             code: "if (typeof bar != 'umdefined') {}",
-            errors: [{ message: "Invalid typeof comparison value", type: "Literal" }]
+            errors: [{ message: "Invalid typeof comparison value.", type: "Literal" }]
         },
         {
             code: "typeof foo == 'strnig'",
-            errors: [{ message: "Invalid typeof comparison value", type: "Literal" }]
+            errors: [{ message: "Invalid typeof comparison value.", type: "Literal" }]
         },
         {
             code: "'strnig' == typeof foo",
-            errors: [{ message: "Invalid typeof comparison value", type: "Literal" }]
+            errors: [{ message: "Invalid typeof comparison value.", type: "Literal" }]
         },
         {
             code: "if (typeof bar == 'umdefined') {}",
-            errors: [{ message: "Invalid typeof comparison value", type: "Literal" }]
+            errors: [{ message: "Invalid typeof comparison value.", type: "Literal" }]
         }
     ]
 });

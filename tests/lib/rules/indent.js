@@ -9,17 +9,17 @@
 // Requirements
 //------------------------------------------------------------------------------
 
-let rule = require("../../../lib/rules/indent"),
+const rule = require("../../../lib/rules/indent"),
     RuleTester = require("../../../lib/testers/rule-tester");
-let fs = require("fs");
-let path = require("path");
+const fs = require("fs");
+const path = require("path");
 
 //------------------------------------------------------------------------------
 // Tests
 //------------------------------------------------------------------------------
 
-let fixture = fs.readFileSync(path.join(__dirname, "../../fixtures/rules/indent/indent-invalid-fixture-1.js"), "utf8");
-let fixedFixture = fs.readFileSync(path.join(__dirname, "../../fixtures/rules/indent/indent-valid-fixture-1.js"), "utf8");
+const fixture = fs.readFileSync(path.join(__dirname, "../../fixtures/rules/indent/indent-invalid-fixture-1.js"), "utf8");
+const fixedFixture = fs.readFileSync(path.join(__dirname, "../../fixtures/rules/indent/indent-valid-fixture-1.js"), "utf8");
 
 /**
  * Create error message object for failure cases
@@ -39,7 +39,7 @@ function expectedErrors(indentType, errors) {
     }
 
     return errors.map(function(err) {
-        let chars = err[1] === 1 ? "character" : "characters";
+        const chars = err[1] === 1 ? "character" : "characters";
 
         return {
             message: "Expected indentation of " + err[1] + " " + indentType + " " + chars + " but found " + err[2] + ".",
@@ -49,7 +49,7 @@ function expectedErrors(indentType, errors) {
     });
 }
 
-let ruleTester = new RuleTester();
+const ruleTester = new RuleTester();
 
 ruleTester.run("indent", rule, {
     valid: [
@@ -1344,31 +1344,35 @@ ruleTester.run("indent", rule, {
         },
         {
             code:
-            "Buffer.length"
+            "Buffer.length",
+            options: [4, { MemberExpression: 1 }]
         },
         {
             code:
             "Buffer\n" +
             "    .indexOf('a')\n" +
-            "    .toString()"
+            "    .toString()",
+            options: [4, { MemberExpression: 1 }]
         },
         {
             code:
             "Buffer.\n" +
-            "    length"
+            "    length",
+            options: [4, { MemberExpression: 1 }]
         },
         {
             code:
             "Buffer\n" +
             "    .foo\n" +
-            "    .bar"
+            "    .bar",
+            options: [4, { MemberExpression: 1 }]
         },
         {
             code:
             "Buffer\n" +
             "\t.foo\n" +
             "\t.bar",
-            options: ["tab"]
+            options: ["tab", { MemberExpression: 1 }]
         },
         {
             code:
@@ -1376,6 +1380,21 @@ ruleTester.run("indent", rule, {
             "    .foo\n" +
             "    .bar",
             options: [2, {MemberExpression: 2}]
+        },
+        {
+            code:
+            "MemberExpression\n" +
+            ".is" +
+            "  .off" +
+            "    .by" +
+            " .default();",
+            options: [4]
+        },
+        {
+            code:
+            "foo = bar.baz()\n" +
+            "        .bip();",
+            options: [4, {MemberExpression: 1}]
         }
     ],
     invalid: [
@@ -1428,7 +1447,7 @@ ruleTester.run("indent", rule, {
         {
             code: fixture,
             output: fixedFixture,
-            options: [2, {SwitchCase: 1}],
+            options: [2, {SwitchCase: 1, MemberExpression: 1}],
             errors: expectedErrors([
                 [5, 2, 4, "VariableDeclaration"],
                 [10, 4, 6, "BlockStatement"],
@@ -2370,6 +2389,7 @@ ruleTester.run("indent", rule, {
             output:
             "Buffer\n" +
             "    .toString()",
+            options: [4, { MemberExpression: 1 }],
             errors: expectedErrors([[2, 4, 0, "Punctuator"]])
         },
         {
@@ -2381,6 +2401,7 @@ ruleTester.run("indent", rule, {
             "Buffer\n" +
             "    .indexOf('a')\n" +
             "    .toString()",
+            options: [4, { MemberExpression: 1 }],
             errors: expectedErrors([[3, 4, 0, "Punctuator"]])
         },
         {
@@ -2390,6 +2411,7 @@ ruleTester.run("indent", rule, {
             output:
             "Buffer.\n" +
             "    length",
+            options: [4, { MemberExpression: 1 }],
             errors: expectedErrors([[2, 4, 0, "Identifier"]])
         },
         {
@@ -2399,7 +2421,7 @@ ruleTester.run("indent", rule, {
             output:
             "Buffer.\n" +
             "\tlength",
-            options: ["tab"],
+            options: ["tab", { MemberExpression: 1 }],
             errors: expectedErrors("tab", [[2, 1, 2, "Identifier"]])
         },
         {
@@ -2411,7 +2433,7 @@ ruleTester.run("indent", rule, {
             "Buffer\n" +
             "    .foo\n" +
             "    .bar",
-            options: [2, {MemberExpression: 2}],
+            options: [2, { MemberExpression: 2 }],
             errors: expectedErrors([[2, 4, 2, "Punctuator"], [3, 4, 2, "Punctuator"]])
         }
     ]

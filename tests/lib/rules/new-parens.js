@@ -9,14 +9,14 @@
 // Requirements
 //------------------------------------------------------------------------------
 
-let rule = require("../../../lib/rules/new-parens"),
+const rule = require("../../../lib/rules/new-parens"),
     RuleTester = require("../../../lib/testers/rule-tester");
 
 //------------------------------------------------------------------------------
 // Tests
 //------------------------------------------------------------------------------
 
-let ruleTester = new RuleTester();
+const ruleTester = new RuleTester();
 
 ruleTester.run("new-parens", rule, {
     valid: [
@@ -24,6 +24,6 @@ ruleTester.run("new-parens", rule, {
         "var a = new Date(function() {});"
     ],
     invalid: [
-        { code: "var a = new Date;", errors: [{ message: "Missing '()' invoking a constructor", type: "NewExpression"}] }
+        { code: "var a = new Date;", errors: [{ message: "Missing '()' invoking a constructor.", type: "NewExpression"}] }
     ]
 });
