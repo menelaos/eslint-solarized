@@ -154,6 +154,7 @@
         "dot-notation": "off",
         "eol-last": "off",
         "eqeqeq": "off",
+        "func-call-spacing": "off",
         "func-names": "off",
         "func-style": "off",
         "generator-star-spacing": "off",
@@ -223,6 +224,7 @@
         "vars-on-top": "off",
         "wrap-iife": "off",
         "wrap-regex": "off",
+        "no-template-curly-in-string": "off",
         "yield-star-spacing": "off",
         "yoda": "off"
     }
