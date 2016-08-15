@@ -237,11 +237,12 @@ function generateRuleIndexPage(basedir) {
 
 /**
  * Creates a release version tag and pushes to origin.
+ * @param {boolean} [ciRelease] Set to true to indicate this is a CI release.
  * @returns {void}
  */
-function release() {
+function release(ciRelease) {
 
-    const releaseInfo = ReleaseOps.release();
+    const releaseInfo = ReleaseOps.release(null, ciRelease);
 
     echo("Generating site");
     target.gensite();
@@ -397,8 +398,8 @@ function lintMarkdown(files) {
             MD041: false  // First line in file should be a top level header
         },
         result = markdownlint.sync({
-            files: files,
-            config: config
+            files,
+            config
         }),
         resultString = result.toString(),
         returnCode = resultString ? 1 : 0;
@@ -650,7 +651,7 @@ target.gensite = function(prereleaseVersion) {
                 }
                 const added = versions.added[baseName];
 
-                if (!versions.removed[baseName] && !fs.existsSync(sourcePath)) {
+                if (!versions.removed[baseName] && !test("-f", sourcePath)) {
                     versions.removed[baseName] = getFirstVersionOfDeletion(sourcePath);
                 }
                 const removed = versions.removed[baseName];
@@ -1109,6 +1110,10 @@ target.perf = function() {
 
 target.release = function() {
     release();
+};
+
+target.ciRelease = function() {
+    release(true);
 };
 
 target.prerelease = function(args) {

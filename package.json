@@ -1,6 +1,6 @@
 {
   "name": "eslint",
-  "version": "3.2.2",
+  "version": "3.3.0",
   "author": "Nicholas C. Zakas <nicholas+npm@nczconsulting.com>",
   "description": "An AST-based pattern checker for JavaScript.",
   "bin": {
@@ -11,6 +11,7 @@
     "test": "node Makefile.js test",
     "lint": "node Makefile.js lint",
     "release": "node Makefile.js release",
+    "ci-release": "node Makefile.js ciRelease",
     "alpharelease": "node Makefile.js prerelease -- alpha",
     "betarelease": "node Makefile.js prerelease -- beta",
     "docs": "node Makefile.js docs",
@@ -29,10 +30,7 @@
     "lib",
     "messages"
   ],
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/eslint/eslint"
-  },
+  "repository": "eslint/eslint",
   "homepage": "http://eslint.org",
   "bugs": "https://github.com/eslint/eslint/issues/",
   "dependencies": {
@@ -57,6 +55,7 @@
     "levn": "^0.3.0",
     "lodash": "^4.0.0",
     "mkdirp": "^0.5.0",
+    "natural-compare": "^1.4.0",
     "optionator": "^0.8.1",
     "path-is-inside": "^1.0.1",
     "pluralize": "^1.2.1",
@@ -81,7 +80,8 @@
     "coveralls": "2.11.4",
     "dateformat": "^1.0.8",
     "ejs": "^2.3.3",
-    "eslint-release": "^0.5.0",
+    "eslint-plugin-node": "^2.0.0",
+    "eslint-release": "^0.10.0",
     "esprima": "^2.4.1",
     "esprima-fb": "^15001.1001.0-dev-harmony-fb",
     "gh-got": "^2.2.0",
