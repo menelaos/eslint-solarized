@@ -11,6 +11,7 @@ rules:
     brace-style: ["error", "1tbs"]
     camelcase: ["error", { properties: "never" }]
     callback-return: ["error", ["cb", "callback", "next"]]
+    class-methods-use-this: "error"
     comma-spacing: "error"
     comma-style: ["error", "last"]
     consistent-return: "error"
@@ -88,6 +89,7 @@ rules:
     no-useless-constructor: "error"
     no-with: "error"
     no-var: "error"
+    object-shorthand: "error"
     one-var-declaration-per-line: "error"
     prefer-const: "error"
     quotes: ["error", "double"]
