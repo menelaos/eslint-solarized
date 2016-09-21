@@ -22,7 +22,7 @@ const fixture = fs.readFileSync(path.join(__dirname, "../../fixtures/rules/inden
 const fixedFixture = fs.readFileSync(path.join(__dirname, "../../fixtures/rules/indent/indent-valid-fixture-1.js"), "utf8");
 
 /**
- * Create error message object for failure cases
+ * Create error message object for failure cases with a single 'found' indentation type
  * @param {string} indentType indent type of string or tab
  * @param {array} errors error info
  * @returns {Object} returns the error messages collection
@@ -39,13 +39,16 @@ function expectedErrors(indentType, errors) {
     }
 
     return errors.map(function(err) {
-        const chars = err[1] === 1 ? "character" : "characters";
+        let message;
 
-        return {
-            message: "Expected indentation of " + err[1] + " " + indentType + " " + chars + " but found " + err[2] + ".",
-            type: err[3] || "Program",
-            line: err[0]
-        };
+        if (typeof err[1] === "string" && typeof err[2] === "string") {
+            message = `Expected indentation of ${err[1]} but found ${err[2]}.`;
+        } else {
+            const chars = indentType + (err[1] === 1 ? "" : "s");
+
+            message = `Expected indentation of ${err[1]} ${chars} but found ${err[2]}.`;
+        }
+        return {message, type: err[3], line: err[0]};
     });
 }
 
@@ -124,6 +127,60 @@ ruleTester.run("indent", rule, {
             "    });\n",
             options: [4],
             parserOptions: { ecmaVersion: 6 }
+        },
+        {
+            code:
+            "var x = 0 &&\n" +
+            "    {\n" +
+            "        a: 1,\n" +
+            "        b: 2\n" +
+            "    };",
+            options: [4]
+        },
+        {
+            code:
+            "var x = 0 &&\n" +
+            "\t{\n" +
+            "\t\ta: 1,\n" +
+            "\t\tb: 2\n" +
+            "\t};",
+            options: ["tab"]
+        },
+        {
+            code:
+            "var x = 0 &&\n" +
+            "    {\n" +
+            "        a: 1,\n" +
+            "        b: 2\n" +
+            "    }||\n" +
+            "    {\n" +
+            "        c: 3,\n" +
+            "        d: 4\n" +
+            "    };",
+            options: [4]
+        },
+        {
+            code:
+            "var x = 0 && 1;",
+            options: [4]
+        },
+        {
+            code:
+            "var x = 0 && { a: 1, b: 2 };",
+            options: [4]
+        },
+        {
+            code:
+            "var x = 0 &&\n" +
+            "    (\n" +
+            "        1\n" +
+            "    );",
+            options: [4]
+        },
+        {
+            code:
+            "var x = 0 && { a: 1, b: 2 };",
+            options: [4]
         },
         {
             code:
@@ -1406,6 +1463,94 @@ ruleTester.run("indent", rule, {
             "  qux();\n" +
             "}",
             options: [2]
+        },
+        {
+            code:
+            "function foo(aaa,\n" +
+            "  bbb, ccc, ddd) {\n" +
+            "    bar();\n" +
+            "}",
+            options: [2, {FunctionDeclaration: {parameters: 1, body: 2}}]
+        },
+        {
+            code:
+            "function foo(aaa, bbb,\n" +
+            "      ccc, ddd) {\n" +
+            "  bar();\n" +
+            "}",
+            options: [2, {FunctionDeclaration: {parameters: 3, body: 1}}]
+        },
+        {
+            code:
+            "function foo(aaa,\n" +
+            "    bbb,\n" +
+            "    ccc) {\n" +
+            "            bar();\n" +
+            "}",
+            options: [4, {FunctionDeclaration: {parameters: 1, body: 3}}]
+        },
+        {
+            code:
+            "function foo(aaa,\n" +
+            "             bbb, ccc,\n" +
+            "             ddd, eee, fff) {\n" +
+            "  bar();\n" +
+            "}",
+            options: [2, {FunctionDeclaration: {parameters: "first", body: 1}}]
+        },
+        {
+            code:
+            "function foo(aaa, bbb)\n" +
+            "{\n" +
+            "      bar();\n" +
+            "}",
+            options: [2, {FunctionDeclaration: {body: 3}}] // FIXME: what is the default for `parameters`?
+        },
+        {
+            code:
+            "function foo(\n" +
+            "  aaa,\n" +
+            "  bbb) {\n" +
+            "    bar();\n" +
+            "}",
+            options: [2, {FunctionDeclaration: {parameters: "first", body: 2}}] // FIXME: make sure this is correct
+        },
+        {
+            code:
+            "var foo = function(aaa,\n" +
+            "    bbb,\n" +
+            "    ccc,\n" +
+            "    ddd) {\n" +
+            "bar();\n" +
+            "}",
+            options: [2, {FunctionExpression: {parameters: 2, body: 0}}]
+        },
+        {
+            code:
+            "var foo = function(aaa,\n" +
+            "  bbb,\n" +
+            "  ccc) {\n" +
+            "                    bar();\n" +
+            "}",
+            options: [2, {FunctionExpression: {parameters: 1, body: 10}}]
+        },
+        {
+            code:
+            "var foo = function(aaa,\n" +
+            "                   bbb, ccc, ddd,\n" +
+            "                   eee, fff) {\n" +
+            "    bar();\n" +
+            "}",
+            options: [4, {FunctionExpression: {parameters: "first", body: 1}}]
+        },
+        {
+            code:
+            "var foo = function(\n" +
+            "  aaa, bbb, ccc,\n" +
+            "  ddd, eee) {\n" +
+            "      bar();\n" +
+            "}",
+            options: [2, {FunctionExpression: {parameters: "first", body: 3}}] // FIXME: make sure this is correct
         }
     ],
     invalid: [
@@ -1581,6 +1726,22 @@ ruleTester.run("indent", rule, {
                 "}",
             options: [4, {SwitchCase: 1}],
             errors: expectedErrors([[4, 8, 4, "BreakStatement"], [7, 8, 4, "BreakStatement"]])
+        },
+        {
+            code:
+            "var x = 0 &&\n" +
+            "    {\n" +
+            "       a: 1,\n" +
+            "          b: 2\n" +
+            "    };",
+            output:
+            "var x = 0 &&\n" +
+            "    {\n" +
+            "        a: 1,\n" +
+            "        b: 2\n" +
+            "    };",
+            options: [4],
+            errors: expectedErrors([[3, 8, 7, "Property"], [4, 8, 10, "Property"]])
         },
         {
             code:
@@ -2519,6 +2680,216 @@ ruleTester.run("indent", rule, {
             "     }",
             options: [2],
             errors: expectedErrors([[3, 2, 4, "ExpressionStatement"], [4, 0, 5, "BlockStatement"]])
+        },
+        {
+            code:
+            "function foo(aaa,\n" +
+            "    bbb, ccc, ddd) {\n" +
+            "      bar();\n" +
+            "}",
+            output:
+            "function foo(aaa,\n" +
+            "  bbb, ccc, ddd) {\n" +
+            "    bar();\n" +
+            "}",
+            options: [2, {FunctionDeclaration: {parameters: 1, body: 2}}],
+            errors: expectedErrors([[2, 2, 4, "Identifier"], [3, 4, 6, "ExpressionStatement"]])
+        },
+        {
+            code:
+            "function foo(aaa, bbb,\n" +
+            "  ccc, ddd) {\n" +
+            "bar();\n" +
+            "}",
+            output:
+            "function foo(aaa, bbb,\n" +
+            "      ccc, ddd) {\n" +
+            "  bar();\n" +
+            "}",
+            options: [2, {FunctionDeclaration: {parameters: 3, body: 1}}],
+            errors: expectedErrors([[2, 6, 2, "Identifier"], [3, 2, 0, "ExpressionStatement"]])
+        },
+        {
+            code:
+            "function foo(aaa,\n" +
+            "        bbb,\n" +
+            "  ccc) {\n" +
+            "      bar();\n" +
+            "}",
+            output:
+            "function foo(aaa,\n" +
+            "    bbb,\n" +
+            "    ccc) {\n" +
+            "            bar();\n" +
+            "}",
+            options: [4, {FunctionDeclaration: {parameters: 1, body: 3}}],
+            errors: expectedErrors([[2, 4, 8, "Identifier"], [3, 4, 2, "Identifier"], [4, 12, 6, "ExpressionStatement"]])
+        },
+        {
+            code:
+            "function foo(aaa,\n" +
+            "  bbb, ccc,\n" +
+            "                   ddd, eee, fff) {\n" +
+            "   bar();\n" +
+            "}",
+            output:
+            "function foo(aaa,\n" +
+            "             bbb, ccc,\n" +
+            "             ddd, eee, fff) {\n" +
+            "  bar();\n" +
+            "}",
+            options: [2, {FunctionDeclaration: {parameters: "first", body: 1}}],
+            errors: expectedErrors([[2, 13, 2, "Identifier"], [3, 13, 19, "Identifier"], [4, 2, 3, "ExpressionStatement"]])
+        },
+        {
+            code:
+            "function foo(aaa, bbb)\n" +
+            "{\n" +
+            "bar();\n" +
+            "}",
+            output:
+            "function foo(aaa, bbb)\n" +
+            "{\n" +
+            "      bar();\n" +
+            "}",
+            options: [2, {FunctionDeclaration: {body: 3}}],
+            errors: expectedErrors([3, 6, 0, "ExpressionStatement"])
+        },
+        {
+            code:
+            "function foo(\n" +
+            "aaa,\n" +
+            "    bbb) {\n" +
+            "bar();\n" +
+            "}",
+            output:
+            "function foo(\n" +
+            "aaa,\n" +
+            "bbb) {\n" +
+            "    bar();\n" +
+            "}",
+            options: [2, {FunctionDeclaration: {parameters: "first", body: 2}}],
+            errors: expectedErrors([[3, 0, 4, "Identifier"], [4, 4, 0, "ExpressionStatement"]])
+        },
+        {
+            code:
+            "var foo = function(aaa,\n" +
+            "  bbb,\n" +
+            "    ccc,\n" +
+            "      ddd) {\n" +
+            "  bar();\n" +
+            "}",
+            output:
+            "var foo = function(aaa,\n" +
+            "    bbb,\n" +
+            "    ccc,\n" +
+            "    ddd) {\n" +
+            "bar();\n" +
+            "}",
+            options: [2, {FunctionExpression: {parameters: 2, body: 0}}],
+            errors: expectedErrors([[2, 4, 2, "Identifier"], [4, 4, 6, "Identifier"], [5, 0, 2, "ExpressionStatement"]])
+        },
+        {
+            code:
+            "var foo = function(aaa,\n" +
+            "   bbb,\n" +
+            " ccc) {\n" +
+            "  bar();\n" +
+            "}",
+            output:
+            "var foo = function(aaa,\n" +
+            "  bbb,\n" +
+            "  ccc) {\n" +
+            "                    bar();\n" +
+            "}",
+            options: [2, {FunctionExpression: {parameters: 1, body: 10}}],
+            errors: expectedErrors([[2, 2, 3, "Identifier"], [3, 2, 1, "Identifier"], [4, 20, 2, "ExpressionStatement"]])
+        },
+        {
+            code:
+            "var foo = function(aaa,\n" +
+            "  bbb, ccc, ddd,\n" +
+            "                        eee, fff) {\n" +
+            "        bar();\n" +
+            "}",
+            output:
+            "var foo = function(aaa,\n" +
+            "                   bbb, ccc, ddd,\n" +
+            "                   eee, fff) {\n" +
+            "    bar();\n" +
+            "}",
+            options: [4, {FunctionExpression: {parameters: "first", body: 1}}],
+            errors: expectedErrors([[2, 19, 2, "Identifier"], [3, 19, 24, "Identifier"], [4, 4, 8, "ExpressionStatement"]])
+        },
+        {
+            code:
+            "var foo = function(\n" +
+            "aaa, bbb, ccc,\n" +
+            "    ddd, eee) {\n" +
+            "  bar();\n" +
+            "}",
+            output:
+            "var foo = function(\n" +
+            "aaa, bbb, ccc,\n" +
+            "ddd, eee) {\n" +
+            "      bar();\n" +
+            "}",
+            options: [2, {FunctionExpression: {parameters: "first", body: 3}}],
+            errors: expectedErrors([[3, 0, 4, "Identifier"], [4, 6, 2, "ExpressionStatement"]])
+        },
+        {
+            code:
+            "var foo = bar;\n" +
+            "  \t  \t  \t  var baz = qux;",
+            output:
+            "var foo = bar;\n" +
+            "var baz = qux;",
+            options: [2],
+            errors: expectedErrors([2, "0 spaces", "8 spaces and 3 tabs", "VariableDeclaration"])
+        },
+        {
+            code:
+            "function foo() {\n" +
+            "  bar();\n" +
+            "  \tbaz();\n" +
+            "\t   \t\t\t  \t\t\t  \t   \tqux();\n" +
+            "}",
+            output:
+            "function foo() {\n" +
+            "  bar();\n" +
+            "  baz();\n" +
+            "  qux();\n" +
+            "}",
+            options: [2],
+            errors: expectedErrors([[3, "2 spaces", "2 spaces and 1 tab", "ExpressionStatement"], [4, "2 spaces", "10 spaces and 9 tabs", "ExpressionStatement"]])
+        },
+        {
+            code:
+            "function foo() {\n" +
+            "\tbar();\n" +
+            "\t  baz();\n" +
+            "  \t\t \t     \t   \t  \t\t\t qux();\n" +
+            "}",
+            output:
+            "function foo() {\n" +
+            "\tbar();\n" +
+            "\tbaz();\n" +
+            "\tqux();\n" +
+            "}",
+            options: ["tab"],
+            errors: expectedErrors("tab", [[3, "1 tab", "2 spaces and 1 tab", "ExpressionStatement"], [4, "1 tab", "14 spaces and 8 tabs", "ExpressionStatement"]])
+        },
+        {
+            code:
+            "function foo() {\n" +
+            "  bar();\n" +
+            "\t\t}",
+            output:
+            "function foo() {\n" +
+            "  bar();\n" +
+            "}",
+            options: [2],
+            errors: expectedErrors([[3, "0 spaces", "2 tabs", "BlockStatement"]])
         }
     ]
 });
