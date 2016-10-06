@@ -62,7 +62,7 @@ const NODE = "node ", // intentional extra space
 
     // Files
     MAKEFILE = "./Makefile.js",
-    JS_FILES = "lib/**/*.js conf/**/*.js",
+    JS_FILES = "lib/**/*.js conf/**/*.js bin/**/*.js",
     JSON_FILES = find("conf/").filter(fileType("json")),
     MARKDOWN_FILES_ARRAY = find("docs/").concat(ls(".")).filter(fileType("md")),
     TEST_FILES = getTestFilePatterns(),
@@ -87,7 +87,8 @@ const NODE = "node ", // intentional extra space
  */
 function getTestFilePatterns() {
     const testLibPath = "tests/lib/",
-        testTemplatesPath = "tests/templates/";
+        testTemplatesPath = "tests/templates/",
+        testBinPath = "tests/bin/";
 
     return ls(testLibPath).filter(function(pathToCheck) {
         return test("-d", testLibPath + pathToCheck);
@@ -96,7 +97,7 @@ function getTestFilePatterns() {
             initialValue.push(testLibPath + currentValues + "/**/*.js");
         }
         return initialValue;
-    }, [testLibPath + "rules/**/*.js", testLibPath + "*.js", testTemplatesPath + "*.js"]).join(" ");
+    }, [testLibPath + "rules/**/*.js", testLibPath + "*.js", testTemplatesPath + "*.js", testBinPath + "**/*.js"]).join(" ");
 }
 
 /**
@@ -658,8 +659,8 @@ target.gensite = function(prereleaseVersion) {
                 text = "---\ntitle: " + title + "\nlayout: doc\n---\n<!-- Note: No pull requests accepted for this file. See README.md in the root directory for details. -->\n\n" + text;
             }
 
-            // 6. Remove .md extension for links and change README to empty string
-            text = text.replace(/\.md(.*?\))/g, ")").replace("README.html", "");
+            // 6. Remove .md extension for relative links and change README to empty string
+            text = text.replace(/\((?!https?:\/\/)(.*?)\.md.*?\)/g, "($1)").replace("README.html", "");
 
             // 7. Check if there's a trailing white line at the end of the file, if there isn't one, add it
             if (!/\n$/.test(text)) {
