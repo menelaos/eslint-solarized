@@ -1515,7 +1515,7 @@ ruleTester.run("indent", rule, {
             "{\n" +
             "      bar();\n" +
             "}",
-            options: [2, {FunctionDeclaration: {body: 3}}] // FIXME: what is the default for `parameters`?
+            options: [2, {FunctionDeclaration: {body: 3}}]
         },
         {
             code:
@@ -1524,7 +1524,7 @@ ruleTester.run("indent", rule, {
             "  bbb) {\n" +
             "    bar();\n" +
             "}",
-            options: [2, {FunctionDeclaration: {parameters: "first", body: 2}}] // FIXME: make sure this is correct
+            options: [2, {FunctionDeclaration: {parameters: "first", body: 2}}]
         },
         {
             code:
@@ -1561,7 +1561,7 @@ ruleTester.run("indent", rule, {
             "  ddd, eee) {\n" +
             "      bar();\n" +
             "}",
-            options: [2, {FunctionExpression: {parameters: "first", body: 3}}] // FIXME: make sure this is correct
+            options: [2, {FunctionExpression: {parameters: "first", body: 3}}]
         },
         {
             code:
@@ -1641,6 +1641,63 @@ ruleTester.run("indent", rule, {
             "    (z === 3 || z === 4));\n" +
             "}",
             options: [2]
+        }, {
+            code:
+            "foo(\n" +
+            "  bar,\n" +
+            "  baz,\n" +
+            "  qux\n" +
+            ");",
+            options: [2, {CallExpression: {arguments: 1}}]
+        }, {
+            code:
+            "foo(\n" +
+            "\tbar,\n" +
+            "\tbaz,\n" +
+            "\tqux\n" +
+            ");",
+            options: ["tab", {CallExpression: {arguments: 1}}]
+        }, {
+            code:
+            "foo(bar,\n" +
+            "        baz,\n" +
+            "        qux);",
+            options: [4, {CallExpression: {arguments: 2}}]
+        }, {
+            code:
+            "foo(\n" +
+            "bar,\n" +
+            "baz,\n" +
+            "qux\n" +
+            ");",
+            options: [2, {CallExpression: {arguments: 0}}]
+        }, {
+            code:
+            "foo(bar,\n" +
+            "    baz,\n" +
+            "    qux\n" +
+            ");",
+            options: [2, {CallExpression: {arguments: "first"}}]
+        }, {
+            code:
+            "foo(bar, baz,\n" +
+            "    qux, barbaz,\n" +
+            "    barqux, bazqux);",
+            options: [2, {CallExpression: {arguments: "first"}}]
+        }, {
+            code:
+            "foo(\n" +
+            "                        bar, baz,\n" +
+            "                        qux);",
+            options: [2, {CallExpression: {arguments: "first"}}]
+        }, {
+            code:
+            "foo(bar,\n" +
+            "        1 + 2,\n" +
+            "        !baz,\n" +
+            "        new Car('!')\n" +
+            ");",
+            options: [2, {CallExpression: {arguments: 4}}]
         }
     ],
     invalid: [
@@ -3198,6 +3255,45 @@ ruleTester.run("indent", rule, {
         },
         {
             code:
+            "{\n" +
+            "    try {\n" +
+            "    }\n" +
+            "catch (err) {\n" +
+            "    }\n" +
+            "finally {\n" +
+            "    }\n" +
+            "}",
+            output:
+            "{\n" +
+            "    try {\n" +
+            "    }\n" +
+            "    catch (err) {\n" +
+            "    }\n" +
+            "    finally {\n" +
+            "    }\n" +
+            "}",
+            errors: expectedErrors([
+                [4, 4, 0, "Keyword"],
+                [6, 4, 0, "Keyword"]
+            ])
+        },
+        {
+            code:
+            "{\n" +
+            "    do {\n" +
+            "    }\n" +
+            "while (true)\n" +
+            "}",
+            output:
+            "{\n" +
+            "    do {\n" +
+            "    }\n" +
+            "    while (true)\n" +
+            "}",
+            errors: expectedErrors([4, 4, 0, "Keyword"])
+        },
+        {
+            code:
             "function foo() {\n" +
             "  bar();\n" +
             "\t\t}",
@@ -3295,6 +3391,82 @@ ruleTester.run("indent", rule, {
             "}",
             options: [2],
             errors: expectedErrors([[2, "2 spaces", "3", "ReturnStatement"]])
+        },
+        {
+            code:
+            "foo(\n" +
+            "bar,\n" +
+            "  baz,\n" +
+            "    qux);",
+            output:
+            "foo(\n" +
+            "  bar,\n" +
+            "  baz,\n" +
+            "  qux);",
+            options: [2, {CallExpression: {arguments: 1}}],
+            errors: expectedErrors([[2, 2, 0, "Identifier"], [4, 2, 4, "Identifier"]])
+        },
+        {
+            code:
+            "foo(\n" +
+            "\tbar,\n" +
+            "\tbaz);",
+            output:
+            "foo(\n" +
+            "    bar,\n" +
+            "    baz);",
+            options: [2, {CallExpression: {arguments: 2}}],
+            errors: expectedErrors([[2, "4 spaces", "1 tab", "Identifier"], [3, "4 spaces", "1 tab", "Identifier"]])
+        },
+        {
+            code:
+            "foo(bar,\n" +
+            "\t\tbaz,\n" +
+            "\t\tqux);",
+            output:
+            "foo(bar,\n" +
+            "\tbaz,\n" +
+            "\tqux);",
+            options: ["tab", {CallExpression: {arguments: 1}}],
+            errors: expectedErrors("tab", [[2, 1, 2, "Identifier"], [3, 1, 2, "Identifier"]])
+        },
+        {
+            code:
+            "foo(bar, baz,\n" +
+            "         qux);",
+            output:
+            "foo(bar, baz,\n" +
+            "    qux);",
+            options: [2, {CallExpression: {arguments: "first"}}],
+            errors: expectedErrors([2, 4, 9, "Identifier"])
+        },
+        {
+            code:
+            "foo(\n" +
+            "          bar,\n" +
+            "    baz);",
+            output:
+            "foo(\n" +
+            "          bar,\n" +
+            "          baz);",
+            options: [2, {CallExpression: {arguments: "first"}}],
+            errors: expectedErrors([3, 10, 4, "Identifier"])
+        },
+        {
+            code:
+            "foo(bar,\n" +
+            "  1 + 2,\n" +
+            "              !baz,\n" +
+            "        new Car('!')\n" +
+            ");",
+            output:
+            "foo(bar,\n" +
+            "      1 + 2,\n" +
+            "      !baz,\n" +
+            "      new Car('!')\n" +
+            ");",
+            options: [2, {CallExpression: {arguments: 3}}],
+            errors: expectedErrors([[2, 6, 2, "BinaryExpression"], [3, 6, 14, "UnaryExpression"], [4, 6, 8, "NewExpression"]])
         }
     ]
 });
