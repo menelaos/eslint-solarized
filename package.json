@@ -1,6 +1,6 @@
 {
   "name": "eslint",
-  "version": "3.9.1",
+  "version": "3.10.1",
   "author": "Nicholas C. Zakas <nicholas+npm@nczconsulting.com>",
   "description": "An AST-based pattern checker for JavaScript.",
   "bin": {
@@ -46,7 +46,7 @@
     "file-entry-cache": "^2.0.0",
     "glob": "^7.0.3",
     "globals": "^9.2.0",
-    "ignore": "^3.1.5",
+    "ignore": "^3.2.0",
     "imurmurhash": "^0.1.4",
     "inquirer": "^0.12.0",
     "is-my-json-valid": "^2.10.0",
@@ -98,7 +98,7 @@
     "load-perf": "^0.2.0",
     "markdownlint": "^0.2.0",
     "mocha": "^2.4.5",
-    "mock-fs": "3.11.0",
+    "mock-fs": "^3.12.1",
     "npm-license": "^0.3.2",
     "phantomjs-prebuilt": "^2.1.7",
     "proxyquire": "^1.7.10",

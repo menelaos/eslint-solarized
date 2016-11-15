@@ -209,7 +209,7 @@ function generateRuleIndexPage(basedir) {
         if (rule.meta.deprecated) {
             categoriesData.deprecated.rules.push({
                 name: basename,
-                replacedBy: rule.meta.docs.replacedBy
+                replacedBy: rule.meta.docs.replacedBy || []
             });
         } else {
             const output = {
@@ -527,7 +527,7 @@ target.lint = function() {
     }
 
     echo("Validating JavaScript test files");
-    lastReturn = exec(ESLINT + testCache + TEST_FILES);
+    lastReturn = exec(`${ESLINT}${testCache}"tests/**/*.js"`);
     if (lastReturn.code !== 0) {
         errors++;
     }
@@ -800,7 +800,7 @@ target.checkRuleFiles = function() {
 
         // check for default configuration
         if (!isInConfig()) {
-            console.error("Missing default setting for %s in eslint.json", basename);
+            console.error("Missing default setting for %s in conf/eslint.json", basename);
             errors++;
         }
 
