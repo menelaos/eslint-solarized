@@ -20,6 +20,14 @@ const assert = require("chai").assert,
 // Tests
 //------------------------------------------------------------------------------
 
+const ESPREE_CONFIG = {
+    ecmaVersion: 6,
+    comment: true,
+    tokens: true,
+    range: true,
+    loc: true
+};
+
 describe("ast-utils", () => {
     const filename = "filename.js";
     let sandbox;
@@ -321,14 +329,6 @@ describe("ast-utils", () => {
     });
 
     describe("isParenthesised", () => {
-        const ESPREE_CONFIG = {
-            ecmaVersion: 6,
-            comment: true,
-            tokens: true,
-            range: true,
-            loc: true
-        };
-
         it("should return false for not parenthesised nodes", () => {
             const code = "condition ? 1 : 2";
             const ast = espree.parse(code, ESPREE_CONFIG);
@@ -663,6 +663,244 @@ describe("ast-utils", () => {
         Object.keys(expectedResults).forEach(key => {
             it(`should return ${expectedResults[key]} for ${key}`, () => {
                 assert.strictEqual(astUtils.isDecimalInteger(espree.parse(key).body[0].expression), expectedResults[key]);
+            });
+        });
+    });
+
+    describe("getFunctionNameWithKind", () => {
+        const expectedResults = {
+            "function foo() {}": "function 'foo'",
+            "(function foo() {})": "function 'foo'",
+            "(function() {})": "function",
+            "function* foo() {}": "generator function 'foo'",
+            "(function* foo() {})": "generator function 'foo'",
+            "(function*() {})": "generator function",
+            "() => {}": "arrow function",
+            "async () => {}": "async arrow function",
+            "({ foo: function foo() {} })": "method 'foo'",
+            "({ foo: function() {} })": "method 'foo'",
+            "({ ['foo']: function() {} })": "method 'foo'",
+            "({ [foo]: function() {} })": "method",
+            "({ foo() {} })": "method 'foo'",
+            "({ foo: function* foo() {} })": "generator method 'foo'",
+            "({ foo: function*() {} })": "generator method 'foo'",
+            "({ ['foo']: function*() {} })": "generator method 'foo'",
+            "({ [foo]: function*() {} })": "generator method",
+            "({ *foo() {} })": "generator method 'foo'",
+            "({ foo: async function foo() {} })": "async method 'foo'",
+            "({ foo: async function() {} })": "async method 'foo'",
+            "({ ['foo']: async function() {} })": "async method 'foo'",
+            "({ [foo]: async function() {} })": "async method",
+            "({ async foo() {} })": "async method 'foo'",
+            "({ get foo() {} })": "getter 'foo'",
+            "({ set foo(a) {} })": "setter 'foo'",
+            "class A { constructor() {} }": "constructor",
+            "class A { foo() {} }": "method 'foo'",
+            "class A { *foo() {} }": "generator method 'foo'",
+            "class A { async foo() {} }": "async method 'foo'",
+            "class A { ['foo']() {} }": "method 'foo'",
+            "class A { *['foo']() {} }": "generator method 'foo'",
+            "class A { async ['foo']() {} }": "async method 'foo'",
+            "class A { [foo]() {} }": "method",
+            "class A { *[foo]() {} }": "generator method",
+            "class A { async [foo]() {} }": "async method",
+            "class A { get foo() {} }": "getter 'foo'",
+            "class A { set foo(a) {} }": "setter 'foo'",
+            "class A { static foo() {} }": "static method 'foo'",
+            "class A { static *foo() {} }": "static generator method 'foo'",
+            "class A { static async foo() {} }": "static async method 'foo'",
+            "class A { static get foo() {} }": "static getter 'foo'",
+            "class A { static set foo(a) {} }": "static setter 'foo'",
+        };
+
+        Object.keys(expectedResults).forEach(key => {
+            it(`should return "${expectedResults[key]}" for "${key}".`, () => {
+                let called = false;
+
+                /**
+                 * Verify.
+                 * @param {ASTNode} node - The function node to verify.
+                 * @returns {void}
+                 */
+                function verify(node) {
+                    assert.strictEqual(
+                        astUtils.getFunctionNameWithKind(node),
+                        expectedResults[key]
+                    );
+                    called = true;
+                }
+
+                eslint.on("FunctionDeclaration", verify);
+                eslint.on("FunctionExpression", verify);
+                eslint.on("ArrowFunctionExpression", verify);
+                eslint.verify(key, {parserOptions: {ecmaVersion: 8}}, "test.js", true);
+
+                assert(called);
+            });
+        });
+    });
+
+    describe("getFunctionHeadLoc", () => {
+        const expectedResults = {
+            "function foo() {}": [0, 12],
+            "(function foo() {})": [1, 13],
+            "(function() {})": [1, 9],
+            "function* foo() {}": [0, 13],
+            "(function* foo() {})": [1, 14],
+            "(function*() {})": [1, 10],
+            "() => {}": [3, 5],
+            "async () => {}": [9, 11],
+            "({ foo: function foo() {} })": [3, 20],
+            "({ foo: function() {} })": [3, 16],
+            "({ ['foo']: function() {} })": [3, 20],
+            "({ [foo]: function() {} })": [3, 18],
+            "({ foo() {} })": [3, 6],
+            "({ foo: function* foo() {} })": [3, 21],
+            "({ foo: function*() {} })": [3, 17],
+            "({ ['foo']: function*() {} })": [3, 21],
+            "({ [foo]: function*() {} })": [3, 19],
+            "({ *foo() {} })": [3, 7],
+            "({ foo: async function foo() {} })": [3, 26],
+            "({ foo: async function() {} })": [3, 22],
+            "({ ['foo']: async function() {} })": [3, 26],
+            "({ [foo]: async function() {} })": [3, 24],
+            "({ async foo() {} })": [3, 12],
+            "({ get foo() {} })": [3, 10],
+            "({ set foo(a) {} })": [3, 10],
+            "class A { constructor() {} }": [10, 21],
+            "class A { foo() {} }": [10, 13],
+            "class A { *foo() {} }": [10, 14],
+            "class A { async foo() {} }": [10, 19],
+            "class A { ['foo']() {} }": [10, 17],
+            "class A { *['foo']() {} }": [10, 18],
+            "class A { async ['foo']() {} }": [10, 23],
+            "class A { [foo]() {} }": [10, 15],
+            "class A { *[foo]() {} }": [10, 16],
+            "class A { async [foo]() {} }": [10, 21],
+            "class A { get foo() {} }": [10, 17],
+            "class A { set foo(a) {} }": [10, 17],
+            "class A { static foo() {} }": [10, 20],
+            "class A { static *foo() {} }": [10, 21],
+            "class A { static async foo() {} }": [10, 26],
+            "class A { static get foo() {} }": [10, 24],
+            "class A { static set foo(a) {} }": [10, 24],
+        };
+
+        Object.keys(expectedResults).forEach(key => {
+            const expectedLoc = {
+                start: {
+                    line: 1,
+                    column: expectedResults[key][0]
+                },
+                end: {
+                    line: 1,
+                    column: expectedResults[key][1]
+                }
+            };
+
+            it(`should return "${JSON.stringify(expectedLoc)}" for "${key}".`, () => {
+                let called = false;
+
+                /**
+                 * Verify.
+                 * @param {ASTNode} node - The function node to verify.
+                 * @returns {void}
+                 */
+                function verify(node) {
+                    assert.deepEqual(
+                        astUtils.getFunctionHeadLoc(node, eslint.getSourceCode()),
+                        expectedLoc
+                    );
+                    called = true;
+                }
+
+                eslint.on("FunctionDeclaration", verify);
+                eslint.on("FunctionExpression", verify);
+                eslint.on("ArrowFunctionExpression", verify);
+                eslint.verify(key, {parserOptions: {ecmaVersion: 8}}, "test.js", true);
+
+                assert(called);
+            });
+        });
+    });
+
+    describe("isEmptyBlock", () => {
+        const expectedResults = {
+            "{}": true,
+            "{ a }": false,
+            a: false,
+        };
+
+        Object.keys(expectedResults).forEach(key => {
+            it(`should return ${expectedResults[key]} for ${key}`, () => {
+                const ast = espree.parse(key);
+
+                assert.strictEqual(astUtils.isEmptyBlock(ast.body[0]), expectedResults[key]);
+            });
+        });
+    });
+
+    describe("isEmptyFunction", () => {
+        const expectedResults = {
+            "(function foo() {})": true,
+            "(function foo() { a })": false,
+            "(a) => {}": true,
+            "(a) => { a }": false,
+            "(a) => a": false,
+        };
+
+        Object.keys(expectedResults).forEach(key => {
+            it(`should return ${expectedResults[key]} for ${key}`, () => {
+                const ast = espree.parse(key, {ecmaVersion: 6});
+
+                assert.strictEqual(astUtils.isEmptyFunction(ast.body[0].expression), expectedResults[key]);
+            });
+        });
+    });
+
+    describe("getLocationFromRangeIndex()", () => {
+        it("should return the location of a range index", () => {
+
+            const CODE =
+                "foo\n" +
+                "bar\r\n" +
+                "baz\r" +
+                "qux\u2028" +
+                "foo\u2029" +
+                "qux\n";
+            const ast = espree.parse(CODE, ESPREE_CONFIG);
+            const sourceCode = new SourceCode(CODE, ast);
+
+            assert.deepEqual(astUtils.getLocationFromRangeIndex(sourceCode, 5), {line: 2, column: 1});
+            assert.deepEqual(astUtils.getLocationFromRangeIndex(sourceCode, 3), {line: 1, column: 3});
+            assert.deepEqual(astUtils.getLocationFromRangeIndex(sourceCode, 4), {line: 2, column: 0});
+            assert.deepEqual(astUtils.getLocationFromRangeIndex(sourceCode, 21), {line: 6, column: 0});
+        });
+
+    });
+
+    describe("getRangeIndexFromLocation()", () => {
+        it("should return the range index of a location", () => {
+            const CODE =
+                "foo\n" +
+                "bar\r\n" +
+                "baz\r" +
+                "qux\u2028" +
+                "foo\u2029" +
+                "qux\n";
+            const ast = espree.parse(CODE, ESPREE_CONFIG);
+            const sourceCode = new SourceCode(CODE, ast);
+
+            assert.strictEqual(astUtils.getRangeIndexFromLocation(sourceCode, {line: 2, column: 1}), 5);
+            assert.strictEqual(astUtils.getRangeIndexFromLocation(sourceCode, {line: 1, column: 3}), 3);
+            assert.strictEqual(astUtils.getRangeIndexFromLocation(sourceCode, {line: 2, column: 0}), 4);
+            assert.strictEqual(astUtils.getRangeIndexFromLocation(sourceCode, {line: 6, column: 0}), 21);
+
+            sourceCode.lines.forEach((line, index) => {
+                assert.strictEqual(
+                    line[0],
+                    sourceCode.text[astUtils.getRangeIndexFromLocation(sourceCode, {line: index + 1, column: 0})]
+                );
             });
         });
     });
