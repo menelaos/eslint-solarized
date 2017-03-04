@@ -92,13 +92,7 @@ ruleTester.run("prefer-const", rule, {
         {
             code: "let x; function foo() { bar(x); } x = 0;",
             options: [{ ignoreReadBeforeAssign: true }]
-        },
-
-        // https://github.com/eslint/eslint/issues/7712
-        // https://github.com/ternjs/acorn/issues/487
-        // This should be a SyntaxError, but espree parses it correctly. Don't throw an error if the variable has multiple declarations.
-        "let foo; const foo = 1;"
-
+        }
     ],
     invalid: [
         {
@@ -118,12 +112,12 @@ ruleTester.run("prefer-const", rule, {
         },
         {
             code: "let [x = -1, y] = [1,2]; y = 0;",
-            output: "let [x = -1, y] = [1,2]; y = 0;",
+            output: null,
             errors: [{ message: "'x' is never reassigned. Use 'const' instead.", type: "Identifier" }]
         },
         {
             code: "let {a: x = -1, b: y} = {a:1,b:2}; y = 0;",
-            output: "let {a: x = -1, b: y} = {a:1,b:2}; y = 0;",
+            output: null,
             errors: [{ message: "'x' is never reassigned. Use 'const' instead.", type: "Identifier" }]
         },
         {
@@ -143,7 +137,7 @@ ruleTester.run("prefer-const", rule, {
         },
         {
             code: "(function() { let [x = -1, y] = [1,2]; y = 0; })();",
-            output: "(function() { let [x = -1, y] = [1,2]; y = 0; })();",
+            output: null,
             errors: [{ message: "'x' is never reassigned. Use 'const' instead.", type: "Identifier" }]
         },
         {
@@ -153,7 +147,7 @@ ruleTester.run("prefer-const", rule, {
         },
         {
             code: "(function() { let {a: x = -1, b: y} = {a:1,b:2}; y = 0; })();",
-            output: "(function() { let {a: x = -1, b: y} = {a:1,b:2}; y = 0; })();",
+            output: null,
             errors: [{ message: "'x' is never reassigned. Use 'const' instead.", type: "Identifier" }]
         },
         {
@@ -183,14 +177,7 @@ ruleTester.run("prefer-const", rule, {
                 "   }",
                 "};"
             ].join("\n"),
-            output: [
-                "var foo = function() {",
-                "    for (const b of c) {",
-                "       let a;",
-                "       a = 1;",
-                "   }",
-                "};"
-            ].join("\n"),
+            output: null,
             errors: [
                 { message: "'a' is never reassigned. Use 'const' instead.", type: "Identifier" }
             ]
@@ -204,14 +191,7 @@ ruleTester.run("prefer-const", rule, {
                 "   }",
                 "};"
             ].join("\n"),
-            output: [
-                "var foo = function() {",
-                "    for (const b of c) {",
-                "       let a;",
-                "       ({a} = 1);",
-                "   }",
-                "};"
-            ].join("\n"),
+            output: null,
             errors: [
                 { message: "'a' is never reassigned. Use 'const' instead.", type: "Identifier" }
             ]
@@ -219,29 +199,29 @@ ruleTester.run("prefer-const", rule, {
 
         {
             code: "let x; x = 0;",
-            output: "let x; x = 0;",
+            output: null,
             errors: [{ message: "'x' is never reassigned. Use 'const' instead.", type: "Identifier", column: 8 }]
         },
         {
             code: "switch (a) { case 0: let x; x = 0; }",
-            output: "switch (a) { case 0: let x; x = 0; }",
+            output: null,
             errors: [{ message: "'x' is never reassigned. Use 'const' instead.", type: "Identifier", column: 29 }]
         },
         {
             code: "(function() { let x; x = 1; })();",
-            output: "(function() { let x; x = 1; })();",
+            output: null,
             errors: [{ message: "'x' is never reassigned. Use 'const' instead.", type: "Identifier", column: 22 }]
         },
 
         {
             code: "let {a = 0, b} = obj; b = 0; foo(a, b);",
-            output: "let {a = 0, b} = obj; b = 0; foo(a, b);",
+            output: null,
             options: [{ destructuring: "any" }],
             errors: [{ message: "'a' is never reassigned. Use 'const' instead.", type: "Identifier" }]
         },
         {
             code: "let {a: {b, c}} = {a: {b: 1, c: 2}}; b = 3;",
-            output: "let {a: {b, c}} = {a: {b: 1, c: 2}}; b = 3;",
+            output: null,
             options: [{ destructuring: "any" }],
             errors: [{ message: "'c' is never reassigned. Use 'const' instead.", type: "Identifier" }]
         },
@@ -256,7 +236,7 @@ ruleTester.run("prefer-const", rule, {
         },
         {
             code: "let a, b; ({a = 0, b} = obj); b = 0; foo(a, b);",
-            output: "let a, b; ({a = 0, b} = obj); b = 0; foo(a, b);",
+            output: null,
             options: [{ destructuring: "any" }],
             errors: [{ message: "'a' is never reassigned. Use 'const' instead.", type: "Identifier" }]
         },
@@ -287,7 +267,7 @@ ruleTester.run("prefer-const", rule, {
         },
         {
             code: "let a, b; ({a = 0, b} = obj); foo(a, b);",
-            output: "let a, b; ({a = 0, b} = obj); foo(a, b);",
+            output: null,
             options: [{ destructuring: "all" }],
             errors: [
                 { message: "'a' is never reassigned. Use 'const' instead.", type: "Identifier" },
@@ -296,7 +276,7 @@ ruleTester.run("prefer-const", rule, {
         },
         {
             code: "let {a = 0, b} = obj, c = a; b = a;",
-            output: "let {a = 0, b} = obj, c = a; b = a;",
+            output: null,
             options: [{ destructuring: "any" }],
             errors: [
                 { message: "'a' is never reassigned. Use 'const' instead.", type: "Identifier" },
@@ -305,7 +285,7 @@ ruleTester.run("prefer-const", rule, {
         },
         {
             code: "let {a = 0, b} = obj, c = a; b = a;",
-            output: "let {a = 0, b} = obj, c = a; b = a;",
+            output: null,
             options: [{ destructuring: "all" }],
             errors: [{ message: "'c' is never reassigned. Use 'const' instead.", type: "Identifier" }]
         },
@@ -313,7 +293,7 @@ ruleTester.run("prefer-const", rule, {
         // Warnings are located at declaration if there are reading references before assignments.
         {
             code: "let x; function foo() { bar(x); } x = 0;",
-            output: "let x; function foo() { bar(x); } x = 0;",
+            output: null,
             errors: [{ message: "'x' is never reassigned. Use 'const' instead.", type: "Identifier", column: 5 }]
         },
 
